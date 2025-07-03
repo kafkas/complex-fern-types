@@ -4,7 +4,15 @@ groups:
   local:
     generators:
       - name: fernapi/fern-typescript-node-sdk
+        version: 2.0.0
+        config: {}
         output:
           location: local-file-system
           path: ../sdks/typescript
-        version: 2.0.0
+
+      - name: fernapi/fern-python-sdk
+        version: 4.23.2
+        config: {}
+        output:
+          location: local-file-system
+          path: ../sdks/python
