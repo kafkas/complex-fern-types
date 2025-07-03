@@ -10,5 +10,4 @@ public struct Triangle: Codable, Hashable, Sendable {
     self.b = b
     self.c = c
   }
-
 }

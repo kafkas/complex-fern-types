@@ -6,5 +6,4 @@ public struct Circle: Codable, Hashable, Sendable {
   public init(radius: Double) {
     self.radius = radius
   }
-
 }

@@ -6,5 +6,4 @@ public struct Square: Codable, Hashable, Sendable {
   public init(length: Double) {
     self.length = length
   }
-
 }
