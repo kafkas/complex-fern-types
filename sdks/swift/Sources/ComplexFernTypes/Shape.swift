@@ -44,20 +44,20 @@ public enum Shape: Codable, Hashable, Sendable {
     }
   }
 
-  case triangle(PackageName.Triangle)
-  case square(PackageName.Square)
-  case circle(PackageName.Circle)
+  case triangle(ComplexFernTypes.Triangle)
+  case square(ComplexFernTypes.Square)
+  case circle(ComplexFernTypes.Circle)
 
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     let type = try container.decode(String.self, forKey: .type)
     switch type {
     case "triangle":
-      self = .triangle(try PackageName.Triangle(from: decoder))
+      self = .triangle(try ComplexFernTypes.Triangle(from: decoder))
     case "square":
-      self = .square(try PackageName.Square(from: decoder))
+      self = .square(try ComplexFernTypes.Square(from: decoder))
     case "circle":
-      self = .circle(try PackageName.Circle(from: decoder))
+      self = .circle(try ComplexFernTypes.Circle(from: decoder))
     default:
       throw DecodingError.dataCorrupted(
         DecodingError.Context(

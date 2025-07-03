@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:complex-fern-types}/sdks/swift",
+            "name": "Debug test (sdks/swift)",
+            "program": "${workspaceFolder:complex-fern-types}/sdks/swift/.build/debug/test",
+            "preLaunchTask": "swift: Build Debug test (sdks/swift)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:complex-fern-types}/sdks/swift",
+            "name": "Release test (sdks/swift)",
+            "program": "${workspaceFolder:complex-fern-types}/sdks/swift/.build/release/test",
+            "preLaunchTask": "swift: Build Release test (sdks/swift)"
+        }
+    ]
+}
