@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+types:
+  Shape:
+    discriminant: type
+    union:
+      triangle: Triangle
+      square: Square
+      circle: Circle
+
+  Triangle:
+    properties:
+      a: double
+      b: double
+      c: double
+
+  Square:
+    properties:
+      length: double
+
+  Circle:
+    properties:
+      radius: double
