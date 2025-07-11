@@ -40,7 +40,9 @@ func testShape() {
 }
 
 Task {
-    testShape()
+
+    let specialEnum = SpecialEnum.d
+
     exit(0)
 }
 
