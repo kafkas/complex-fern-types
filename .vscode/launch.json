@@ -17,6 +17,24 @@
             "name": "Release test (sdks/swift)",
             "program": "${workspaceFolder:complex-fern-types}/sdks/swift/.build/release/test",
             "preLaunchTask": "swift: Build Release test (sdks/swift)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:complex-fern-types}/sdks/swift-manual",
+            "name": "Debug test (sdks/swift-manual)",
+            "program": "${workspaceFolder:complex-fern-types}/sdks/swift-manual/.build/debug/test",
+            "preLaunchTask": "swift: Build Debug test (sdks/swift-manual)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:complex-fern-types}/sdks/swift-manual",
+            "name": "Release test (sdks/swift-manual)",
+            "program": "${workspaceFolder:complex-fern-types}/sdks/swift-manual/.build/release/test",
+            "preLaunchTask": "swift: Build Release test (sdks/swift-manual)"
         }
     ]
 }
