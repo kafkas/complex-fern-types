@@ -3,15 +3,23 @@ public enum Shape: Codable, Hashable, Sendable {
     case square(Square)
     case circle(Circle)
 
-    struct Triangle {
-        public let triangle: Triangle
+    public struct Triangle: Codable, Hashable, Sendable {
+        public let type: String = "triangle"
+        public let a: Double
+        public let b: Double
+        public let c: Double
+        public let additionalProperties: [String: JSONValue]
     }
 
-    struct Square {
-        public let square: Square
+    public struct Square: Codable, Hashable, Sendable {
+        public let type: String = "square"
+        public let length: Double
+        public let additionalProperties: [String: JSONValue]
     }
 
-    struct Circle {
-        public let circle: Circle
+    public struct Circle: Codable, Hashable, Sendable {
+        public let type: String = "circle"
+        public let radius: Double
+        public let additionalProperties: [String: JSONValue]
     }
 }
