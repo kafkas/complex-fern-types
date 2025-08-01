@@ -1,4 +1,4 @@
-import ApiTarget
+import Api
 
 // Example usage of the Api library
 print("ApiClient started")
