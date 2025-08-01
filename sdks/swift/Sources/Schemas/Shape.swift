@@ -3,6 +3,28 @@ public enum Shape: Codable, Hashable, Sendable {
     case square(Square)
     case circle(Circle)
 
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let discriminant = try container.decode(String.self, forKey: .type)
+        switch discriminant {
+        case "triangle":
+            self = .triangle(try Triangle(from: decoder))
+        case "square":
+            self = .square(try Square(from: decoder))
+        case "circle":
+            self = .circle(try Circle(from: decoder))
+        default:
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Unknown shape discriminant value: \(discriminant)"
+                )
+            )
+        }}
+
+    public func encode(to encoder: Encoder) throws -> Void {
+    }
+
     public struct Triangle: Codable, Hashable, Sendable {
         public let type: String = "triangle"
         public let a: Double
@@ -39,6 +61,7 @@ public enum Shape: Codable, Hashable, Sendable {
         }
 
         enum CodingKeys: String, CodingKey, CaseIterable {
+            case type
             case a
             case b
             case c
@@ -71,6 +94,7 @@ public enum Shape: Codable, Hashable, Sendable {
         }
 
         enum CodingKeys: String, CodingKey, CaseIterable {
+            case type
             case length
         }
     }
@@ -101,7 +125,12 @@ public enum Shape: Codable, Hashable, Sendable {
         }
 
         enum CodingKeys: String, CodingKey, CaseIterable {
+            case type
             case radius
         }
+    }
+
+    enum CodingKeys: String, CodingKey, CaseIterable {
+        case type
     }
 }
