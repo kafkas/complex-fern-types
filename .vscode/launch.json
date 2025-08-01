@@ -35,6 +35,42 @@
             "name": "Release test (sdks/swift-manual)",
             "program": "${workspaceFolder:complex-fern-types}/sdks/swift-manual/.build/release/test",
             "preLaunchTask": "swift: Build Release test (sdks/swift-manual)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:complex-fern-types}/sdks/swift-client",
+            "name": "Debug test (sdks/swift-client)",
+            "program": "${workspaceFolder:complex-fern-types}/sdks/swift-client/.build/debug/test",
+            "preLaunchTask": "swift: Build Debug test (sdks/swift-client)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:complex-fern-types}/sdks/swift-client",
+            "name": "Release test (sdks/swift-client)",
+            "program": "${workspaceFolder:complex-fern-types}/sdks/swift-client/.build/release/test",
+            "preLaunchTask": "swift: Build Release test (sdks/swift-client)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:complex-fern-types}/sdks/swift-client",
+            "name": "Debug ApiClient (sdks/swift-client)",
+            "program": "${workspaceFolder:complex-fern-types}/sdks/swift-client/.build/debug/ApiClient",
+            "preLaunchTask": "swift: Build Debug ApiClient (sdks/swift-client)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:complex-fern-types}/sdks/swift-client",
+            "name": "Release ApiClient (sdks/swift-client)",
+            "program": "${workspaceFolder:complex-fern-types}/sdks/swift-client/.build/release/ApiClient",
+            "preLaunchTask": "swift: Build Release ApiClient (sdks/swift-client)"
         }
     ]
 }
