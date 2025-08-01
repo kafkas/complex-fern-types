@@ -24,6 +24,14 @@ public enum Shape: Codable, Hashable, Sendable {
     }
 
     public func encode(to encoder: Encoder) throws -> Void {
+        switch self {
+        case .triangle(let data):
+            try data.encode(to: encoder)
+        case .square(let data):
+            try data.encode(to: encoder)
+        case .circle(let data):
+            try data.encode(to: encoder)
+        }
     }
 
     public struct Triangle: Codable, Hashable, Sendable {
