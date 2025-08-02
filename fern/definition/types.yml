@@ -21,3 +21,10 @@ types:
   Circle:
     properties:
       radius: double
+
+  DocumentPath:
+    discriminated: false
+    union:
+      - string
+      - list<string>
+      - integer
