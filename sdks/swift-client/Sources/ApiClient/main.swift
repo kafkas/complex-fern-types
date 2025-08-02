@@ -108,6 +108,99 @@ func main() {
             print()
         }
 
+        // Test 7: DocumentPath undiscriminated union
+        print("=== Testing DocumentPath Undiscriminated Union ===")
+        
+        // Test string variant
+        let stringPath = DocumentPath.string("users/123")
+        try testRoundTrip(stringPath, description: "DocumentPath.string")
+        
+        // Test string array variant  
+        let stringArrayPath = DocumentPath.stringArray(["users", "123", "profile"])
+        try testRoundTrip(stringArrayPath, description: "DocumentPath.stringArray")
+        
+        // Test int variant
+        let intPath = DocumentPath.int(42)
+        try testRoundTrip(intPath, description: "DocumentPath.int")
+        
+        // Test DocumentPath decoding from JSON strings
+        print("Testing DocumentPath decoding from JSON...")
+        
+        let stringJSON = #""users/123""#
+        let decodedString = try testJSONDecoding(stringJSON, as: DocumentPath.self, description: "DocumentPath from string JSON")
+        if case .string(let value) = decodedString {
+            print("  ✅ Correctly decoded as string: \(value)")
+        } else {
+            throw TestError.unexpectedResult("Expected string variant")
+        }
+        
+        let stringArrayJSON = #"["users", "123", "profile"]"#
+        let decodedStringArray = try testJSONDecoding(stringArrayJSON, as: DocumentPath.self, description: "DocumentPath from string array JSON")
+        if case .stringArray(let value) = decodedStringArray {
+            print("  ✅ Correctly decoded as string array: \(value)")
+        } else {
+            throw TestError.unexpectedResult("Expected stringArray variant")
+        }
+        
+        let intJSON = #"42"#
+        let decodedInt = try testJSONDecoding(intJSON, as: DocumentPath.self, description: "DocumentPath from int JSON")
+        if case .int(let value) = decodedInt {
+            print("  ✅ Correctly decoded as int: \(value)")
+        } else {
+            throw TestError.unexpectedResult("Expected int variant")
+        }
+        
+        // Test 8: DocumentPath with ambiguous cases
+        print("=== Testing DocumentPath Ambiguous Cases ===")
+        
+        // Test numeric string (should be decoded as string, not int)
+        let numericStringJSON = #""123""#
+        let decodedNumericString = try testJSONDecoding(numericStringJSON, as: DocumentPath.self, description: "DocumentPath from numeric string")
+        if case .string(let value) = decodedNumericString {
+            print("  ✅ Correctly decoded numeric string as string: \(value)")
+        } else {
+            throw TestError.unexpectedResult("Expected string variant for numeric string")
+        }
+        
+        // Test single-element array with string (should be decoded as array, not string)
+        let singleElementArrayJSON = #"["single"]"#
+        let decodedSingleArray = try testJSONDecoding(singleElementArrayJSON, as: DocumentPath.self, description: "DocumentPath from single-element array")
+        if case .stringArray(let value) = decodedSingleArray {
+            print("  ✅ Correctly decoded single-element array as stringArray: \(value)")
+        } else {
+            throw TestError.unexpectedResult("Expected stringArray variant for single-element array")
+        }
+        
+        // Test 9: DocumentPath invalid type handling
+        print("=== Testing DocumentPath Invalid Type Handling ===")
+        
+        let booleanJSON = #"true"#
+        do {
+            _ = try testJSONDecoding(booleanJSON, as: DocumentPath.self, description: "Invalid boolean type")
+            throw TestError.unexpectedResult("Should have failed with invalid boolean type")
+        } catch TestError.decodingFailed(let message) {
+            print("  ✅ Correctly failed with invalid boolean type: \(message)")
+        }
+        
+        let objectJSON = #"{"key": "value"}"#
+        do {
+            _ = try testJSONDecoding(objectJSON, as: DocumentPath.self, description: "Invalid object type")
+            throw TestError.unexpectedResult("Should have failed with invalid object type")
+        } catch TestError.decodingFailed(let message) {
+            print("  ✅ Correctly failed with invalid object type: \(message)")
+        }
+        
+        // Test array with non-string elements
+        let mixedArrayJSON = #"["string", 123, true]"#
+        do {
+            _ = try testJSONDecoding(mixedArrayJSON, as: DocumentPath.self, description: "Invalid mixed array type")
+            throw TestError.unexpectedResult("Should have failed with invalid mixed array type")
+        } catch TestError.decodingFailed(let message) {
+            print("  ✅ Correctly failed with invalid mixed array type: \(message)")
+        }
+        
+        print()
+
         print("🎉 All tests passed successfully!")
 
     } catch {
