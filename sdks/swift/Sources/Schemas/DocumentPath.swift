@@ -19,7 +19,7 @@ public enum DocumentPath: Codable, Hashable, Sendable {
         }
     }
 
-    public func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws -> Void {
         var container = encoder.singleValueContainer()
         switch self {
         case .string(let value):
