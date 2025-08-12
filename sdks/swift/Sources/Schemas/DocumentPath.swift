@@ -1,3 +1,5 @@
+import Foundation
+
 public enum DocumentPath: Codable, Hashable, Sendable {
     case string(String)
     case stringArray([String])

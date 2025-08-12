@@ -1,7 +1,10 @@
+import Foundation
+
 public struct Triangle: Codable, Hashable, Sendable {
     public let a: Double
     public let b: Double
     public let c: Double
+    /// Additional properties that are not explicitly defined in the schema
     public let additionalProperties: [String: JSONValue]
 
     public init(
@@ -32,6 +35,7 @@ public struct Triangle: Codable, Hashable, Sendable {
         try container.encode(self.c, forKey: .c)
     }
 
+    /// Keys for encoding/decoding struct properties.
     enum CodingKeys: String, CodingKey, CaseIterable {
         case a
         case b
