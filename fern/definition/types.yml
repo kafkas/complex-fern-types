@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
 
 types:
+  # Discriminated union
   Shape:
     discriminant: type
     union:
@@ -22,9 +23,27 @@ types:
     properties:
       radius: double
 
+  # Undiscriminated union
   DocumentPath:
     discriminated: false
     union:
       - string
       - list<string>
       - integer
+
+  # Object with literal property
+  Address:
+    properties:
+      line1: string
+      line2: optional<string>
+      city: string
+      state: string
+      zip: string
+      # For this type, we want a `Country` enum nested in the `Address` object
+      country: literal<"USA">
+
+  # Literal type alias
+  GreenColor: literal<"green">
+
+  # Alias type that resolves to a literal
+  EmeraldColor: GreenColor
