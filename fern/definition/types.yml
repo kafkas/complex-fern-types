@@ -60,3 +60,12 @@ types:
     properties:
       name: string
       code: string
+
+  # A boolean literal type alias
+  IsOpen: literal<true>
+
+  # An object with a boolean literal property
+  Project:
+    properties:
+      is_open: literal<false>
+      name: string
