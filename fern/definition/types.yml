@@ -47,3 +47,16 @@ types:
 
   # Alias type that resolves to a literal
   EmeraldColor: GreenColor
+
+  # An object including a nested literal enum with the same name as a schema type (Country)
+  Account:
+    properties:
+      address_type: literal<"country"> # This will result in a nested `Country` enum
+      name: string
+      is_open: boolean
+      country: Country
+
+  Country:
+    properties:
+      name: string
+      code: string
