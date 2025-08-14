@@ -204,14 +204,11 @@ func main() async {
         // Test 10: File download functionality
         print("=== Testing File Download ===")
         
-        var downloadedFileData: Data!
-        
         do {
             let apiClient = ApiClient(baseURL: "http://localhost:8080")
             
             print("Downloading file...")
             let fileData = try await apiClient.service.downloadFile()
-            downloadedFileData = fileData
             print("  ✅ File downloaded successfully!")
             print("  📄 File size: \(fileData.count) bytes")
             
@@ -240,14 +237,39 @@ func main() async {
         do {
             let apiClient = ApiClient(baseURL: "http://localhost:8080")
             
-            print("Uploading the downloaded file back to server...")
-            let uploadResponse = try await apiClient.service.uploadFile(fileData: downloadedFileData)
+            // Read the Swift icon PNG file for upload
+            let currentDirectory = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+            let pngFilePath = currentDirectory.appendingPathComponent("swift-icon.png")
+            
+            guard let testFileData = try? Data(contentsOf: pngFilePath) else {
+                throw TestError.unexpectedResult("Could not read swift-icon.png file")
+            }
+            
+            print("Reading Swift icon PNG file for upload...")
+            print("  📄 File: swift-icon.png")
+            print("  📄 File size: \(testFileData.count) bytes")
+            print("  📝 Content type: PNG image")
+            
+            // Verify it's a valid PNG by checking the header
+            let pngHeader = testFileData.prefix(8)
+            let expectedPNGHeader = Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+            if pngHeader == expectedPNGHeader {
+                print("  ✅ Valid PNG file format confirmed")
+            } else {
+                print("  ⚠️  File may not be a valid PNG")
+            }
+            
+            print("Uploading PNG file to server...")
+            let uploadResponse = try await apiClient.service.uploadFile(fileData: testFileData)
             print("  ✅ File uploaded successfully!")
             print("  📤 Server response: \(uploadResponse)")
             
             // Verify the response indicates success
-            if uploadResponse.contains("uploaded successfully") && uploadResponse.contains("\(downloadedFileData.count) bytes") {
+            if uploadResponse.contains("uploaded successfully") && uploadResponse.contains("\(testFileData.count) bytes") {
                 print("  ✅ Upload verified - server received correct file size")
+                if uploadResponse.contains("uploaded_file.png") {
+                    print("  ✅ File saved with correct PNG extension")
+                }
             } else {
                 print("  ⚠️  Upload response may indicate an issue")
             }
