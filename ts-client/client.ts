@@ -1,2 +1,1 @@
-import { SeedApi } from '../sdks/typescript/src';
-
+import { SeedApi } from "../sdks/typescript/src";
