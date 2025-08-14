@@ -12,6 +12,7 @@ final class HTTPClient: Sendable {
     func performRequest<T: Decodable>(
         method: HTTP.Method,
         path: String,
+        contentType requestContentType: HTTP.ContentType = .applicationJson,
         headers requestHeaders: [String: String] = [:],
         queryParams requestQueryParams: [String: QueryParameter?] = [:],
         body requestBody: (any Encodable)? = nil,
@@ -23,25 +24,20 @@ final class HTTPClient: Sendable {
         let request = try await buildRequest(
             method: method,
             path: path,
-            requestContentType: .applicationJson,
+            requestContentType: requestContentType,
             requestHeaders: requestHeaders,
             requestQueryParams: requestQueryParams,
             requestBody: requestBody,
             requestOptions: requestOptions
         )
 
-        let (data, contentType) = try await executeRequestWithURLSession(request)
+        let (data, _) = try await executeRequestWithURLSession(request)
 
-        if T.self == String.self {
-            do {
-                return try jsonDecoder.decode(responseType, from: data)
-            } catch {
-                if contentType?.lowercased().contains("text") == true,
-                    let string = String(data: data, encoding: .utf8) as? T
-                {
-                    return string
-                }
-                throw ClientError.decodingError(error)
+        if responseType == Data.self {
+            if let data = data as? T {
+                return data
+            } else {
+                throw ClientError.invalidResponse
             }
         }
 
@@ -55,6 +51,7 @@ final class HTTPClient: Sendable {
     func performRequest(
         method: HTTP.Method,
         path: String,
+        contentType requestContentType: HTTP.ContentType = .applicationJson,
         headers requestHeaders: [String: String] = [:],
         queryParams requestQueryParams: [String: QueryParameter?] = [:],
         body requestBody: (any Encodable)? = nil,
@@ -65,64 +62,14 @@ final class HTTPClient: Sendable {
         let request = try await buildRequest(
             method: method,
             path: path,
-            requestContentType: .applicationJson,
+            requestContentType: requestContentType,
             requestHeaders: requestHeaders,
             requestQueryParams: requestQueryParams,
             requestBody: requestBody,
             requestOptions: requestOptions
         )
+
         _ = try await executeRequestWithURLSession(request)
-    }
-
-    func performFileUpload<T: Decodable>(
-        method: HTTP.Method,
-        path: String,
-        headers requestHeaders: [String: String] = [:],
-        queryParams requestQueryParams: [String: QueryParameter?] = [:],
-        fileData: Data,
-        requestOptions: RequestOptions? = nil,
-        responseType: T.Type
-    ) async throws -> T {
-        let request = try await buildRequest(
-            method: method,
-            path: path,
-            requestContentType: .applicationOctetStream,
-            requestHeaders: requestHeaders,
-            requestQueryParams: requestQueryParams,
-            requestBody: .data(fileData),
-            requestOptions: requestOptions
-        )
-        let (data, _) = try await executeRequestWithURLSession(request)
-
-        do {
-            return try jsonDecoder.decode(responseType, from: data)
-        } catch {
-            throw ClientError.decodingError(error)
-        }
-    }
-
-    func performFileDownload(
-        method: HTTP.Method,
-        path: String,
-        headers requestHeaders: [String: String] = [:],
-        queryParams requestQueryParams: [String: QueryParameter?] = [:],
-        body requestBody: (any Encodable)? = nil,
-        requestOptions: RequestOptions? = nil
-    ) async throws -> Data {
-        let requestBody: HTTP.RequestBody? = requestBody.map { .jsonEncodable($0) }
-
-        let request = try await buildRequest(
-            method: method,
-            path: path,
-            requestContentType: .applicationJson,
-            requestHeaders: requestHeaders,
-            requestQueryParams: requestQueryParams,
-            requestBody: requestBody,
-            requestOptions: requestOptions
-        )
-
-        let (data, _) = try await executeRequestWithURLSession(request)
-        return data
     }
 
     private func buildRequest(
