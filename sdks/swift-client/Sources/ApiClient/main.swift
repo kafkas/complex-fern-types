@@ -260,7 +260,7 @@ func main() async {
             }
             
             print("Uploading PNG file to server...")
-            let uploadResponse = try await apiClient.service.uploadFile(fileData: testFileData)
+            let uploadResponse = try await apiClient.service.uploadFile(request: testFileData)
             print("  ✅ File uploaded successfully!")
             print("  📤 Server response: \(uploadResponse)")
             

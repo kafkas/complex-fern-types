@@ -23,13 +23,13 @@ public final class ServiceClient: Sendable {
             responseType: Data.self
         )
     }
-    
-    public func uploadFile(fileData: Data, requestOptions: RequestOptions? = nil) async throws -> String {
+
+    public func uploadFile(request: Data, requestOptions: RequestOptions? = nil) async throws -> String {
         return try await httpClient.performRequest(
             method: .post,
             path: "/upload-file",
             contentType: .applicationOctetStream,
-            body: fileData,
+            body: request,
             requestOptions: requestOptions,
             responseType: String.self
         )

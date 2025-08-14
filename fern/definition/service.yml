@@ -10,3 +10,13 @@ service:
       path: "/download-file"
       method: POST
       response: file
+
+    uploadFile:
+      display-name: Upload file
+      method: POST
+      path: "/upload-file"
+      request:
+        body: bytes
+        content-type: application/octet-stream
+      response:
+        type: string
