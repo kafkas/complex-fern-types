@@ -101,6 +101,30 @@ final class HTTPClient: Sendable {
         }
     }
 
+    func performFileDownload(
+        method: HTTP.Method,
+        path: String,
+        headers requestHeaders: [String: String] = [:],
+        queryParams requestQueryParams: [String: QueryParameter?] = [:],
+        body requestBody: (any Encodable)? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws -> Data {
+        let requestBody: HTTP.RequestBody? = requestBody.map { .jsonEncodable($0) }
+
+        let request = try await buildRequest(
+            method: method,
+            path: path,
+            requestContentType: .applicationJson,
+            requestHeaders: requestHeaders,
+            requestQueryParams: requestQueryParams,
+            requestBody: requestBody,
+            requestOptions: requestOptions
+        )
+
+        let (data, _) = try await executeRequestWithURLSession(request)
+        return data
+    }
+
     private func buildRequest(
         method: HTTP.Method,
         path: String,

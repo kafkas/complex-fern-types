@@ -1,7 +1,7 @@
 import Api
 import Foundation
 
-func main() {
+func main() async {
     print("🧪 Starting Shape Encoding/Decoding Tests\n")
 
     do {
@@ -201,6 +201,38 @@ func main() {
         
         print()
 
+        // Test 10: File download functionality
+        print("=== Testing File Download ===")
+        
+        do {
+            let apiClient = ApiClient(baseURL: "http://localhost:8080")
+            
+            print("Downloading file...")
+            let fileData = try await apiClient.service.downloadFile()
+            print("  ✅ File downloaded successfully!")
+            print("  📄 File size: \(fileData.count) bytes")
+            
+            // Check if the downloaded data looks like a PDF
+            let dataString = String(data: fileData.prefix(10), encoding: .utf8) ?? ""
+            if dataString.hasPrefix("%PDF") {
+                print("  ✅ Downloaded content appears to be a PDF file")
+            } else {
+                print("  ⚠️  Downloaded content might not be a PDF (first 10 bytes: \(dataString))")
+            }
+            
+            // Optionally save the file to verify
+            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let filePath = documentsPath.appendingPathComponent("downloaded_sample.pdf")
+            try fileData.write(to: filePath)
+            print("  💾 File saved to: \(filePath.path)")
+            
+        } catch {
+            print("  ❌ File download failed: \(error)")
+            throw error
+        }
+
+        print()
+
         print("🎉 All tests passed successfully!")
 
     } catch {
@@ -209,4 +241,4 @@ func main() {
     }
 }
 
-main()
+await main()
