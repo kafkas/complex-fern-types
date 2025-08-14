@@ -9,6 +9,29 @@ final class HTTPClient: Sendable {
         self.clientConfig = config
     }
 
+    /// Performs a request with no response.
+    func performRequest(
+        method: HTTP.Method,
+        path: String,
+        contentType requestContentType: HTTP.ContentType = .applicationJson,
+        headers requestHeaders: [String: String] = [:],
+        queryParams requestQueryParams: [String: QueryParameter?] = [:],
+        body requestBody: (any Encodable)? = nil,
+        requestOptions: RequestOptions? = nil
+    ) async throws {
+        _ = try await performRequest(
+            method: method,
+            path: path,
+            contentType: requestContentType,
+            headers: requestHeaders,
+            queryParams: requestQueryParams,
+            body: requestBody,
+            requestOptions: requestOptions,
+            responseType: Data.self
+        )
+    }
+
+    /// Performs a request with the specified response type.
     func performRequest<T: Decodable>(
         method: HTTP.Method,
         path: String,
@@ -46,30 +69,6 @@ final class HTTPClient: Sendable {
         } catch {
             throw ClientError.decodingError(error)
         }
-    }
-
-    func performRequest(
-        method: HTTP.Method,
-        path: String,
-        contentType requestContentType: HTTP.ContentType = .applicationJson,
-        headers requestHeaders: [String: String] = [:],
-        queryParams requestQueryParams: [String: QueryParameter?] = [:],
-        body requestBody: (any Encodable)? = nil,
-        requestOptions: RequestOptions? = nil
-    ) async throws {
-        let requestBody: HTTP.RequestBody? = requestBody.map { .jsonEncodable($0) }
-
-        let request = try await buildRequest(
-            method: method,
-            path: path,
-            requestContentType: requestContentType,
-            requestHeaders: requestHeaders,
-            requestQueryParams: requestQueryParams,
-            requestBody: requestBody,
-            requestOptions: requestOptions
-        )
-
-        _ = try await executeRequestWithURLSession(request)
     }
 
     private func buildRequest(
