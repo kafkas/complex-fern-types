@@ -7,6 +7,6 @@ service:
       method: POST
 
     downloadFile:
-      path: ""
+      path: "/download-file"
       method: POST
       response: file

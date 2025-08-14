@@ -61,7 +61,7 @@
             "type": "typescript"
         },
         "endpointId": {
-            "path": "/",
+            "path": "/download-file",
             "method": "POST",
             "identifierOverride": "endpoint_service.downloadFile"
         },

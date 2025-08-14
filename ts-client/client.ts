@@ -1,7 +1,7 @@
-import { SeedApiClient } from "../sdks/typescript/src";
+import { SeedApiClient } from "../sdks/typescript/dist/cjs/index";
 
 const client = new SeedApiClient({
-  environment: "http://localhost:3000",
+  environment: "http://localhost:8080",
 });
 
 async function main() {

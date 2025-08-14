@@ -99,9 +99,11 @@ export class Service {
     ): Promise<core.WithRawResponse<core.BinaryResponse>> {
         var _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
         const _response = await core.fetcher<core.BinaryResponse>({
-            url:
+            url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
-                (await core.Supplier.get(this._options.environment)),
+                    (await core.Supplier.get(this._options.environment)),
+                "/download-file",
+            ),
             method: "POST",
             headers: _headers,
             queryParameters: requestOptions?.queryParams,
@@ -130,7 +132,7 @@ export class Service {
                     rawResponse: _response.rawResponse,
                 });
             case "timeout":
-                throw new errors.SeedApiTimeoutError("Timeout exceeded when calling POST /.");
+                throw new errors.SeedApiTimeoutError("Timeout exceeded when calling POST /download-file.");
             case "unknown":
                 throw new errors.SeedApiError({
                     message: _response.error.errorMessage,

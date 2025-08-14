@@ -1,0 +1,13 @@
+{
+  "name": "root",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "ts-node": "10.9.2",
+    "tsx": "4.20.4",
+    "typescript": "5.8.3"
+  },
+  "scripts": {
+    "client": "ts-node ts-client/client.ts"
+  }
+}

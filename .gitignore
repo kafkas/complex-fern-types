@@ -1,2 +1,9 @@
 .cursor
+
 sdks/swift/.build/**/*
+
+server/dist/**/*
+
+node_modules/
+
+.DS_Store
