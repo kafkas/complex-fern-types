@@ -1,10 +1,12 @@
 service:
   auth: false
-  base-path: ""
+  base-path: /
   endpoints:
-    download:
-      path: /download-content/{id}
-      method: GET
-      path-parameters:
-        id: string
-      response: bytes
+    simple:
+      path: "/snippet"
+      method: POST
+
+    downloadFile:
+      path: ""
+      method: POST
+      response: file
