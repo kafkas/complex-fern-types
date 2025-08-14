@@ -42,7 +42,13 @@ final class HTTPClient: Sendable {
         requestOptions: RequestOptions? = nil,
         responseType: T.Type
     ) async throws -> T {
-        let requestBody: HTTP.RequestBody? = requestBody.map { .jsonEncodable($0) }
+        let requestBody: HTTP.RequestBody? = requestBody.map { body in
+            if let data = body as? Data {
+                return .data(data)
+            } else {
+                return .jsonEncodable(body)
+            }
+        }
 
         let request = try await buildRequest(
             method: method,
@@ -59,6 +65,14 @@ final class HTTPClient: Sendable {
         if responseType == Data.self {
             if let data = data as? T {
                 return data
+            } else {
+                throw ClientError.invalidResponse
+            }
+        }
+        
+        if responseType == String.self {
+            if let string = String(data: data, encoding: .utf8) as? T {
+                return string
             } else {
                 throw ClientError.invalidResponse
             }

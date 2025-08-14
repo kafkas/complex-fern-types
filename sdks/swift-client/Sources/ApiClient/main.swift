@@ -204,11 +204,14 @@ func main() async {
         // Test 10: File download functionality
         print("=== Testing File Download ===")
         
+        var downloadedFileData: Data!
+        
         do {
             let apiClient = ApiClient(baseURL: "http://localhost:8080")
             
             print("Downloading file...")
             let fileData = try await apiClient.service.downloadFile()
+            downloadedFileData = fileData
             print("  ✅ File downloaded successfully!")
             print("  📄 File size: \(fileData.count) bytes")
             
@@ -228,6 +231,29 @@ func main() async {
             
         } catch {
             print("  ❌ File download failed: \(error)")
+            throw error
+        }
+        
+        // Test 11: File upload functionality
+        print("=== Testing File Upload ===")
+        
+        do {
+            let apiClient = ApiClient(baseURL: "http://localhost:8080")
+            
+            print("Uploading the downloaded file back to server...")
+            let uploadResponse = try await apiClient.service.uploadFile(fileData: downloadedFileData)
+            print("  ✅ File uploaded successfully!")
+            print("  📤 Server response: \(uploadResponse)")
+            
+            // Verify the response indicates success
+            if uploadResponse.contains("uploaded successfully") && uploadResponse.contains("\(downloadedFileData.count) bytes") {
+                print("  ✅ Upload verified - server received correct file size")
+            } else {
+                print("  ⚠️  Upload response may indicate an issue")
+            }
+            
+        } catch {
+            print("  ❌ File upload failed: \(error)")
             throw error
         }
 
