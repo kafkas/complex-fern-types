@@ -140,4 +140,71 @@ export class Service {
                 });
         }
     }
+
+    /**
+     * @param {core.file.Uploadable} uploadable
+     * @param {Service.RequestOptions} requestOptions - Request-specific configuration.
+     */
+    public uploadFile(
+        uploadable: core.file.Uploadable,
+        requestOptions?: Service.RequestOptions,
+    ): core.HttpResponsePromise<string> {
+        return core.HttpResponsePromise.fromPromise(this.__uploadFile(uploadable, requestOptions));
+    }
+
+    private async __uploadFile(
+        uploadable: core.file.Uploadable,
+        requestOptions?: Service.RequestOptions,
+    ): Promise<core.WithRawResponse<string>> {
+        const _binaryUploadRequest = await core.file.toBinaryUploadRequest(uploadable);
+        var _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            this._options?.headers,
+            _binaryUploadRequest.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)),
+                "/upload-file",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/octet-stream",
+            queryParameters: requestOptions?.queryParams,
+            requestType: "bytes",
+            duplex: "half",
+            body: _binaryUploadRequest.body,
+            timeoutMs: requestOptions?.timeoutInSeconds != null ? requestOptions.timeoutInSeconds * 1000 : 60000,
+            maxRetries: requestOptions?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+        });
+        if (_response.ok) {
+            return { data: _response.body as string, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            throw new errors.SeedApiError({
+                statusCode: _response.error.statusCode,
+                body: _response.error.body,
+                rawResponse: _response.rawResponse,
+            });
+        }
+
+        switch (_response.error.reason) {
+            case "non-json":
+                throw new errors.SeedApiError({
+                    statusCode: _response.error.statusCode,
+                    body: _response.error.rawBody,
+                    rawResponse: _response.rawResponse,
+                });
+            case "timeout":
+                throw new errors.SeedApiTimeoutError("Timeout exceeded when calling POST /upload-file.");
+            case "unknown":
+                throw new errors.SeedApiError({
+                    message: _response.error.errorMessage,
+                    rawResponse: _response.rawResponse,
+                });
+        }
+    }
 }

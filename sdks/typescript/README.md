@@ -46,6 +46,54 @@ try {
 }
 ```
 
+## File Uploads
+
+You can upload files using the client:
+
+```typescript
+import { createReadStream } from "fs";
+
+await client.service.uploadFile(createReadStream("path/to/file"), ...);
+await client.service.uploadFile(new ReadableStream(), ...);
+await client.service.uploadFile(Buffer.from('binary data'), ...);
+await client.service.uploadFile(new Blob(['binary data'], { type: 'audio/mpeg' }), ...);
+await client.service.uploadFile(new File(['binary data'], 'file.mp3'), ...);
+await client.service.uploadFile(new ArrayBuffer(8), ...);
+await client.service.uploadFile(new Uint8Array([0, 1, 2]), ...);
+```
+
+The client accepts a variety of types for file upload parameters:
+
+- Stream types: `fs.ReadStream`, `stream.Readable`, and `ReadableStream`
+- Buffered types: `Buffer`, `Blob`, `File`, `ArrayBuffer`, `ArrayBufferView`, and `Uint8Array`
+
+### Metadata
+
+You can configure metadata when uploading a file:
+
+```typescript
+const file: Uploadable.WithMetadata = {
+    data: createReadStream("path/to/file"),
+    filename: "my-file", // optional
+    contentType: "audio/mpeg", // optional
+    contentLength: 1949, // optional
+};
+```
+
+Alternatively, you can upload a file directly from a file path:
+
+```typescript
+const file: Uploadable.FromPath = {
+    path: "path/to/file",
+    filename: "my-file", // optional
+    contentType: "audio/mpeg", // optional
+    contentLength: 1949, // optional
+};
+```
+
+The metadata is used to set the `Content-Length`, `Content-Type`, and `Content-Disposition` headers. If not provided, the client will attempt to determine them automatically.
+For example, `fs.ReadStream` has a `path` property which the SDK uses to retrieve the file size from the filesystem without loading it into memory.
+
 ## Binary Response
 
 You can consume binary data from endpoints using the `BinaryResponse` type which lets you choose how to consume the data:

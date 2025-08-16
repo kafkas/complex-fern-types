@@ -69,3 +69,10 @@ types:
     properties:
       is_open: literal<false>
       name: string
+
+  EnumWithBadValues:
+    enum:
+      - "badValue1"
+      # - "bad-value1" # This currently breaks output
+      - "badValue2"
+      - "badValue3"

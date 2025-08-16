@@ -10,3 +10,4 @@ export * from "./Account.js";
 export * from "./Country.js";
 export * from "./IsOpen.js";
 export * from "./Project.js";
+export * from "./EnumWithBadValues.js";

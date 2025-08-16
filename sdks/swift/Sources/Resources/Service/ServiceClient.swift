@@ -15,21 +15,20 @@ public final class ServiceClient: Sendable {
         )
     }
 
-    public func downloadFile(requestOptions: RequestOptions? = nil) async throws -> Data {
+    public func downloadFile(requestOptions: RequestOptions? = nil) async throws -> JSONValue {
         return try await httpClient.performRequest(
             method: .post,
             path: "/download-file",
             requestOptions: requestOptions,
-            responseType: Data.self
+            responseType: JSONValue.self
         )
     }
 
     public func uploadFile(request: Data, requestOptions: RequestOptions? = nil) async throws -> String {
-        return try await httpClient.performRequest(
+        return try await httpClient.performFileUpload(
             method: .post,
             path: "/upload-file",
-            contentType: .applicationOctetStream,
-            body: request,
+            fileData: request,
             requestOptions: requestOptions,
             responseType: String.self
         )
