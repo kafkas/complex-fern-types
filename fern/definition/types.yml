@@ -64,6 +64,15 @@ types:
   # A boolean literal type alias
   IsOpen: literal<true>
 
+  BadLiteral1: literal<"">
+  BadLiteral2: literal<"1">
+  BadLiteral3: literal<"3.14">
+  BadLiteral4: literal<"-%()_=--#-_-- some bad value --_$32--">
+  BadLiteral5: literal<"50%">
+  BadLiteral6: literal<"    ">
+  BadLiteral7: literal<"привет">
+  BadLiteral8: literal<"😛">
+
   # An object with a boolean literal property
   Project:
     properties:
