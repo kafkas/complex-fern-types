@@ -4,21 +4,24 @@ groups:
   local:
     generators:
       - name: fernapi/fern-swift-sdk
+        config:
+          clientClassName: ComplexFernTypesClient
         output:
           location: local-file-system
           path: ../sdks/swift
-        version: 0.0.0
+        version: latest
+        ir-version: v59
 
-      - name: fernapi/fern-typescript-node-sdk
-        version: 2.0.0
-        config: {}
-        output:
-          location: local-file-system
-          path: ../sdks/typescript
+      # - name: fernapi/fern-typescript-node-sdk
+      #   version: 2.0.0
+      #   config: {}
+      #   output:
+      #     location: local-file-system
+      #     path: ../sdks/typescript
 
-      - name: fernapi/fern-python-sdk
-        version: 4.23.2
-        config: {}
-        output:
-          location: local-file-system
-          path: ../sdks/python
+      # - name: fernapi/fern-python-sdk
+      #   version: 4.23.2
+      #   config: {}
+      #   output:
+      #     location: local-file-system
+      #     path: ../sdks/python
