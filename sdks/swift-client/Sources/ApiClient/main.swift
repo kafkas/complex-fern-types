@@ -205,7 +205,7 @@ func main() async {
         print("=== Testing File Download ===")
         
         do {
-            let apiClient = ApiClient(baseURL: "http://localhost:8080")
+            let apiClient = ComplexFernTypesClient(baseURL: "http://localhost:8080")
             
             print("Downloading file...")
             let fileData = try await apiClient.service.downloadFile()
@@ -235,7 +235,7 @@ func main() async {
         print("=== Testing File Upload ===")
         
         do {
-            let apiClient = ApiClient(baseURL: "http://localhost:8080")
+            let apiClient = ComplexFernTypesClient(baseURL: "http://localhost:8080")
             
             // Read the Swift icon PNG file for upload
             let currentDirectory = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
