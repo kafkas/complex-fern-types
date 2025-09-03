@@ -85,3 +85,9 @@ types:
       # - "bad-value1" # This currently breaks output for TS and Swift (and possibly others)
       - "badValue2"
       - "badValue3"
+
+  Extensive:
+    properties:
+      name: string
+      creation_date: date
+      creation_time: datetime
