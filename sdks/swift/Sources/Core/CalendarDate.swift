@@ -11,21 +11,25 @@ public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible
     /// The day component (valid range: 1-31, depending on month)
     public let day: Int
 
-    public init(year: Int, month: Int, day: Int) {
+    /// Failable initializer for creating a CalendarDate with validation
+    public init?(year: Int, month: Int, day: Int) {
+        guard Self.isValidDate(year: year, month: month, day: day) else {
+            return nil
+        }
         self.year = year
         self.month = month
         self.day = day
     }
 
-    /// Creates a CalendarDate from a `YYYY-MM-DD` string
-    public init(_ dateString: String) throws {
+    /// Failable initializer for creating a CalendarDate from a `YYYY-MM-DD` string
+    public init?(_ dateString: String) {
         let components = dateString.split(separator: "-")
         guard components.count == 3,
             let year = Int(components[0]),
             let month = Int(components[1]),
             let day = Int(components[2])
         else {
-            throw Error.invalidFormat(dateString)
+            return nil
         }
         self.init(year: year, month: month, day: day)
     }
@@ -35,7 +39,10 @@ public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let dateString = try container.decode(String.self)
-        try self.init(dateString)
+        guard let calendarDate = CalendarDate(dateString) else {
+            throw Error.invalidFormat(dateString)
+        }
+        self = calendarDate
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -58,6 +65,40 @@ public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible
         if lhs.year != rhs.year { return lhs.year < rhs.year }
         if lhs.month != rhs.month { return lhs.month < rhs.month }
         return lhs.day < rhs.day
+    }
+
+    // MARK: - Private Helpers
+
+    /// Validates that the given year, month, and day form a valid calendar date.
+    private static func isValidDate(year: Int, month: Int, day: Int) -> Bool {
+        guard year >= 1, year <= 9999,
+            month >= 1, month <= 12,
+            day >= 1
+        else {
+            return false
+        }
+
+        let daysInMonth: [Int] = [
+            31,  // January
+            isLeapYear(year) ? 29 : 28,  // February
+            31,  // March
+            30,  // April
+            31,  // May
+            30,  // June
+            31,  // July
+            31,  // August
+            30,  // September
+            31,  // October
+            30,  // November
+            31,  // December
+        ]
+
+        return day <= daysInMonth[month - 1]
+    }
+
+    /// Determines if the given year is a leap year
+    private static func isLeapYear(_ year: Int) -> Bool {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
     }
 
     // MARK: - Error Types
