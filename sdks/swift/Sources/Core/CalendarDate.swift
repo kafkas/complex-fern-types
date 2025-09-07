@@ -2,8 +2,13 @@ import Foundation
 
 /// Represents a calendar date without time information, following RFC 3339 section 5.6 (`YYYY-MM-DD` format)
 public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible, Comparable {
+    /// The year component (expected range: 1-9999)
     public let year: Int
+
+    /// The month component (valid range: 1-12)
     public let month: Int
+
+    /// The day component (valid range: 1-31, depending on month)
     public let day: Int
 
     public init(year: Int, month: Int, day: Int) {
@@ -20,7 +25,7 @@ public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible
             let month = Int(components[1]),
             let day = Int(components[2])
         else {
-            throw CalendarDateError.invalidFormat(dateString)
+            throw Error.invalidFormat(dateString)
         }
         self.init(year: year, month: month, day: day)
     }
@@ -28,6 +33,9 @@ public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible
     // MARK: - CustomStringConvertible
 
     public var description: String {
+        // Format as YYYY-MM-DD with zero-padding
+        // %04d = 4-digit year with leading zeros (e.g., 2025)
+        // %02d = 2-digit month/day with leading zeros (e.g., 01, 05)
         String(format: "%04d-%02d-%02d", year, month, day)
     }
 
@@ -50,15 +58,18 @@ public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible
         if lhs.month != rhs.month { return lhs.month < rhs.month }
         return lhs.day < rhs.day
     }
-}
 
-public enum CalendarDateError: Error, LocalizedError {
-    case invalidFormat(String)
+    // MARK: - Error Types
 
-    public var errorDescription: String? {
-        switch self {
-        case .invalidFormat(let string):
-            return "Invalid date format: '\(string)'. Expected YYYY-MM-DD"
+    /// Errors that can occur when working with CalendarDate
+    public enum Error: Swift.Error, LocalizedError {
+        case invalidFormat(String)
+
+        public var errorDescription: String? {
+            switch self {
+            case .invalidFormat(let string):
+                return "Invalid date format: '\(string)'. Expected YYYY-MM-DD"
+            }
         }
     }
 }
