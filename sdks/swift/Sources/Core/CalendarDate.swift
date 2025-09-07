@@ -30,15 +30,6 @@ public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible
         self.init(year: year, month: month, day: day)
     }
 
-    // MARK: - CustomStringConvertible
-
-    public var description: String {
-        // Format as YYYY-MM-DD with zero-padding
-        // %04d = 4-digit year with leading zeros (e.g., 2025)
-        // %02d = 2-digit month/day with leading zeros (e.g., 01, 05)
-        String(format: "%04d-%02d-%02d", year, month, day)
-    }
-
     // MARK: - Codable
 
     public init(from decoder: Decoder) throws {
@@ -52,7 +43,17 @@ public struct CalendarDate: Codable, Hashable, Sendable, CustomStringConvertible
         try container.encode(description)
     }
 
+    // MARK: - CustomStringConvertible
+
+    public var description: String {
+        // Format as YYYY-MM-DD with zero-padding
+        // %04d = 4-digit year with leading zeros (e.g., 2025)
+        // %02d = 2-digit month/day with leading zeros (e.g., 01, 05)
+        String(format: "%04d-%02d-%02d", year, month, day)
+    }
+
     // MARK: - Comparable
+
     public static func < (lhs: CalendarDate, rhs: CalendarDate) -> Bool {
         if lhs.year != rhs.year { return lhs.year < rhs.year }
         if lhs.month != rhs.month { return lhs.month < rhs.month }
