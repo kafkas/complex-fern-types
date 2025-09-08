@@ -2,14 +2,14 @@ import Foundation
 
 public struct Extensive: Codable, Hashable, Sendable {
     public let name: String
-    public let creationDate: Date
+    public let creationDate: CalendarDate
     public let creationTime: Date
     /// Additional properties that are not explicitly defined in the schema
     public let additionalProperties: [String: JSONValue]
 
     public init(
         name: String,
-        creationDate: Date,
+        creationDate: CalendarDate,
         creationTime: Date,
         additionalProperties: [String: JSONValue] = .init()
     ) {
@@ -22,7 +22,7 @@ public struct Extensive: Codable, Hashable, Sendable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.name = try container.decode(String.self, forKey: .name)
-        self.creationDate = try container.decode(Date.self, forKey: .creationDate)
+        self.creationDate = try container.decode(CalendarDate.self, forKey: .creationDate)
         self.creationTime = try container.decode(Date.self, forKey: .creationTime)
         self.additionalProperties = try decoder.decodeAdditionalProperties(using: CodingKeys.self)
     }
