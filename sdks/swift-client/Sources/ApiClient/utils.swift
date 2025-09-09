@@ -10,6 +10,7 @@ func encodeToJSON<T: Codable>(_ value: T) throws -> Data {
     do {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
+        encoder.dateEncodingStrategy = .iso8601
         return try encoder.encode(value)
     } catch {
         throw TestError.encodingFailed("Failed to encode \(type(of: value)): \(error)")
@@ -19,6 +20,27 @@ func encodeToJSON<T: Codable>(_ value: T) throws -> Data {
 func decodeFromJSON<T: Codable>(_ data: Data, as type: T.Type) throws -> T {
     do {
         let decoder = JSONDecoder()
+        // Use custom strategy for robust ISO 8601 date parsing with fractional seconds
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+
+            // Fallback for dates without fractional seconds
+            formatter.formatOptions = [.withInternetDateTime]
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+
+            throw DecodingError.dataCorruptedError(
+                in: container, debugDescription: "Invalid date format: \(dateString)")
+        }
         return try decoder.decode(type, from: data)
     } catch {
         throw TestError.decodingFailed("Failed to decode \(type): \(error)")
