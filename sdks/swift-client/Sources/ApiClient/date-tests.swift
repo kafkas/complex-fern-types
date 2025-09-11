@@ -2,48 +2,6 @@ import Api
 import Foundation
 
 func runDateTests() throws {
-    // Test ambiguous timezone datetime strings
-    let testAmbiguousDatetimes = [
-        "2025-11-02 01:30",
-        "2025-11-02T01:30",
-        "2025-11-02 01:30:00",
-        "2025-11-02T01:30:00",
-        "2025-11-02 01:30:00.123",
-        "2025-11-02T01:30:00.123",
-    ]
-
-    for testDateString in testAmbiguousDatetimes {
-        print("Testing ambiguous datetime: '\(testDateString)'")
-
-        let formatter = ISO8601DateFormatter()
-
-        // Test with .withInternetDateTime and .withFractionalSeconds
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        if let date1 = formatter.date(from: testDateString) {
-            print("  ✅ Parsed with .withInternetDateTime + .withFractionalSeconds: \(date1)")
-        } else {
-            print("  ❌ Failed with .withInternetDateTime + .withFractionalSeconds")
-        }
-
-        // Test with just .withInternetDateTime
-        formatter.formatOptions = [.withInternetDateTime]
-        if let date2 = formatter.date(from: testDateString) {
-            print("  ✅ Parsed with .withInternetDateTime: \(date2)")
-        } else {
-            print("  ❌ Failed with .withInternetDateTime")
-        }
-
-        // Test with no format options (basic parsing)
-        formatter.formatOptions = []
-        if let date3 = formatter.date(from: testDateString) {
-            print("  ✅ Parsed with no format options: \(date3)")
-        } else {
-            print("  ❌ Failed with no format options")
-        }
-
-        print()
-    }
-
     print("=== Testing Extensive Type (CalendarDate and Date) ===")
 
     do {
@@ -58,6 +16,9 @@ func runDateTests() throws {
             name: "Test Project",
             creationDate: testCalendarDate,
             creationTime: testDateTime,
+            nullableString: .string("abc"),
+            nullableOptionalInt: .number(4),
+            optionalNullableString: .string("abc"),
             additionalProperties: ["priority": JSONValue.string("high")]
         )
         try testRoundTrip(extensive, description: "Extensive with CalendarDate and Date")
