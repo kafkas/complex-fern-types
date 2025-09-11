@@ -6,4 +6,7 @@ export interface Extensive {
     name: string;
     creation_date: string;
     creation_time: string;
+    nullable_string: string | null;
+    nullable_optional_int: (number | undefined) | null;
+    optional_nullable_string?: string | null;
 }
