@@ -16,9 +16,9 @@ func runDateTests() throws {
             name: "Test Project",
             creationDate: testCalendarDate,
             creationTime: testDateTime,
-            nullableString: .string("abc"),
-            nullableOptionalInt: .number(4),
-            optionalNullableString: .string("abc"),
+            nullableString: .value("abc"),
+            nullableOptionalInt: .value(4),
+            optionalNullableString: .value("abc"),
             additionalProperties: ["priority": JSONValue.string("high")]
         )
         try testRoundTrip(extensive, description: "Extensive with CalendarDate and Date")

@@ -4,9 +4,9 @@ public struct Extensive: Codable, Hashable, Sendable {
     public let name: String
     public let creationDate: CalendarDate
     public let creationTime: Date
-    public let nullableString: JSONValue
-    public let nullableOptionalInt: JSONValue
-    public let optionalNullableString: JSONValue?
+    public let nullableString: Nullable<String>
+    public let nullableOptionalInt: Nullable<Int>
+    public let optionalNullableString: Nullable<String>?
     /// Additional properties that are not explicitly defined in the schema
     public let additionalProperties: [String: JSONValue]
 
@@ -14,9 +14,9 @@ public struct Extensive: Codable, Hashable, Sendable {
         name: String,
         creationDate: CalendarDate,
         creationTime: Date,
-        nullableString: JSONValue,
-        nullableOptionalInt: JSONValue,
-        optionalNullableString: JSONValue? = nil,
+        nullableString: Nullable<String>,
+        nullableOptionalInt: Nullable<Int>,
+        optionalNullableString: Nullable<String>? = nil,
         additionalProperties: [String: JSONValue] = .init()
     ) {
         self.name = name
@@ -33,9 +33,19 @@ public struct Extensive: Codable, Hashable, Sendable {
         self.name = try container.decode(String.self, forKey: .name)
         self.creationDate = try container.decode(CalendarDate.self, forKey: .creationDate)
         self.creationTime = try container.decode(Date.self, forKey: .creationTime)
-        self.nullableString = try container.decode(JSONValue.self, forKey: .nullableString)
-        self.nullableOptionalInt = try container.decode(JSONValue.self, forKey: .nullableOptionalInt)
-        self.optionalNullableString = try container.decodeIfPresent(JSONValue.self, forKey: .optionalNullableString)
+        self.nullableString = try container.decode(Nullable<String>.self, forKey: .nullableString)
+        self.nullableOptionalInt = try container.decode(Nullable<Int>.self, forKey: .nullableOptionalInt)
+        // Handle optional<nullable<T>> pattern - need to distinguish between missing and null
+        if container.contains(.optionalNullableString) {
+            if try container.decodeNil(forKey: .optionalNullableString) {
+                self.optionalNullableString = .null
+            } else {
+                let value = try container.decode(String.self, forKey: .optionalNullableString)
+                self.optionalNullableString = .value(value)
+            }
+        } else {
+            self.optionalNullableString = nil
+        }
         self.additionalProperties = try decoder.decodeAdditionalProperties(using: CodingKeys.self)
     }
 
@@ -47,7 +57,16 @@ public struct Extensive: Codable, Hashable, Sendable {
         try container.encode(self.creationTime, forKey: .creationTime)
         try container.encode(self.nullableString, forKey: .nullableString)
         try container.encode(self.nullableOptionalInt, forKey: .nullableOptionalInt)
-        try container.encodeIfPresent(self.optionalNullableString, forKey: .optionalNullableString)
+        // Handle optional<nullable<T>> pattern - need to distinguish between missing and null
+        switch self.optionalNullableString {
+        case .some(.value(let stringValue)):
+            try container.encode(stringValue, forKey: .optionalNullableString)
+        case .some(.null):
+            try container.encodeNil(forKey: .optionalNullableString)
+        case .none:
+            // Don't encode the key at all - field is missing
+            break
+        }
     }
 
     /// Keys for encoding/decoding struct properties.
