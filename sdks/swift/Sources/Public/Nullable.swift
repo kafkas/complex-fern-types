@@ -27,11 +27,7 @@ where Wrapped: Codable & Hashable & Sendable {
             try container.encodeNil()
         }
     }
-}
 
-// MARK: - Convenience Extensions
-
-extension Nullable {
     /// Returns the wrapped value if present, otherwise nil
     public var wrappedValue: Wrapped? {
         switch self {
@@ -44,10 +40,12 @@ extension Nullable {
 
     /// Returns true if this contains an explicit null value
     public var isNull: Bool {
-        if case .null = self {
+        switch self {
+        case .value(_):
+            return false
+        case .null:
             return true
         }
-        return false
     }
 
     /// Convenience initializer from optional value
@@ -58,40 +56,4 @@ extension Nullable {
             self = .null
         }
     }
-}
-
-// MARK: - Extensions for Optional Nullable Pattern
-
-extension Optional where Wrapped: NullableProtocol {
-    /// Returns the deeply wrapped value if present, otherwise nil
-    /// For Nullable<String>?, this returns String?
-    public var wrappedValue: Wrapped.WrappedType? {
-        return self?.wrappedValue
-    }
-
-    /// Returns true if this field is missing from JSON (the outer optional is nil)
-    public var isMissing: Bool {
-        return self == nil
-    }
-
-    /// Returns true if this field was present but explicitly null
-    public var isExplicitlyNull: Bool {
-        return self?.isNull == true
-    }
-
-    /// Returns true if this field has a concrete value (not null or missing)
-    public var hasValue: Bool {
-        return self?.wrappedValue != nil
-    }
-}
-
-/// Protocol to enable extensions on Optional<Nullable<T>>
-public protocol NullableProtocol {
-    associatedtype WrappedType
-    var wrappedValue: WrappedType? { get }
-    var isNull: Bool { get }
-}
-
-extension Nullable: NullableProtocol {
-    public typealias WrappedType = Wrapped
 }

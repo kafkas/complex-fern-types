@@ -181,34 +181,34 @@ func runNullableTests() throws {
     
     if let opt = decodedAllValues.optionalNullableString,
        opt.wrappedValue == "json optional" {
-        print("  ✅ OptionalNullable.wrappedValue works correctly")  
+        print("  ✅ Nullable<T>?.wrappedValue works correctly")  
     }
     
-    // Test extension methods on Optional<Nullable<T>>
-    if !decodedAllValues.optionalNullableString.isMissing {
-        print("  ✅ Optional<Nullable<T>>.isMissing works correctly")
+    // Test native Swift patterns for Optional<Nullable<T>>
+    if decodedAllValues.optionalNullableString != nil {
+        print("  ✅ Missing detection (!= nil) works correctly")
     }
     
-    if !decodedAllValues.optionalNullableString.isExplicitlyNull {
-        print("  ✅ Optional<Nullable<T>>.isExplicitlyNull works correctly")
+    if decodedAllValues.optionalNullableString?.isNull != true {
+        print("  ✅ Null detection (?.isNull != true) works correctly")
     }
     
-    if decodedAllValues.optionalNullableString.hasValue {
-        print("  ✅ Optional<Nullable<T>>.hasValue works correctly")
+    if decodedAllValues.optionalNullableString?.wrappedValue != nil {
+        print("  ✅ Value detection (?.wrappedValue != nil) works correctly")
     }
     
     // Test with null case
-    if decodedWithNulls.optionalNullableString.isExplicitlyNull {
-        print("  ✅ Optional<Nullable<T>>.isExplicitlyNull detects null correctly")
+    if decodedWithNulls.optionalNullableString?.isNull == true {
+        print("  ✅ Null detection (?.isNull == true) works correctly")
     }
     
-    if !decodedWithNulls.optionalNullableString.hasValue {
-        print("  ✅ Optional<Nullable<T>>.hasValue detects null correctly")
+    if decodedWithNulls.optionalNullableString?.wrappedValue == nil {
+        print("  ✅ Value detection with null works correctly")
     }
     
     // Test with missing case
-    if decodedMissingOptional.optionalNullableString.isMissing {
-        print("  ✅ Optional<Nullable<T>>.isMissing detects missing correctly")
+    if decodedMissingOptional.optionalNullableString == nil {
+        print("  ✅ Missing detection (== nil) works correctly")
     }
     
     print("✅ All nullable type tests passed!")
