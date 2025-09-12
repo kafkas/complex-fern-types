@@ -1,7 +1,6 @@
 import Foundation
 
-/// Represents a value that is always present in JSON but can be either a concrete value or explicit `null`.
-/// This maps to `nullable<T>` in Fern - the field is always present, but the value can be null.
+/// Represents a value that can be either a concrete value or explicit `null`, distinguishing between null and missing fields in JSON.
 public enum Nullable<Wrapped>: Codable, Hashable, Sendable
 where Wrapped: Codable & Hashable & Sendable {
     case value(Wrapped)
@@ -29,12 +28,6 @@ where Wrapped: Codable & Hashable & Sendable {
         }
     }
 }
-
-// For `optional<nullable<T>>` patterns, simply use `Nullable<T>?`
-// This gives you three states naturally:
-// - `nil` = missing from JSON
-// - `.null` = present in JSON as explicit null
-// - `.value(x)` = present in JSON with actual value
 
 // MARK: - Convenience Extensions
 
