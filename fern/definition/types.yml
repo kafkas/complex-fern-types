@@ -92,5 +92,4 @@ types:
       creation_date: date
       creation_time: datetime
       nullable_string: nullable<string>
-      nullable_optional_int: nullable<optional<integer>>
       optional_nullable_string: optional<nullable<string>>
