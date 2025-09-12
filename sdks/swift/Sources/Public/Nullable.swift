@@ -1,7 +1,6 @@
 import Foundation
 
-/// Represents a value that can be either a concrete value or explicit `null`.
-/// Use this for `nullable<T>` fields that are always present in JSON.
+/// Represents a value that can be either a concrete value or explicit `null`, distinguishing between null and missing fields in JSON.
 public enum Nullable<Wrapped>: Codable, Hashable, Sendable
 where Wrapped: Codable & Hashable & Sendable {
     case value(Wrapped)
