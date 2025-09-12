@@ -54,6 +54,8 @@ func jsonString(from data: Data) -> String {
 func testRoundTrip<T: Codable & Equatable>(_ value: T, description: String) throws {
     print("Testing \(description)...")
 
+    print("  Initial value: \(value)")
+
     // Encode to JSON
     let jsonData = try encodeToJSON(value)
     let jsonStr = jsonString(from: jsonData)

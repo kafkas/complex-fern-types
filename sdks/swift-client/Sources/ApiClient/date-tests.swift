@@ -17,7 +17,6 @@ func runDateTests() throws {
             creationDate: testCalendarDate,
             creationTime: testDateTime,
             nullableString: .value("abc"),
-            nullableOptionalInt: .value(4),
             optionalNullableString: .value("abc"),
             additionalProperties: ["priority": JSONValue.string("high")]
         )
