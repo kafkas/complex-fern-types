@@ -1,6 +1,7 @@
 import Foundation
 
-/// Represents a value that can be either a concrete value or explicit `null`, distinguishing between null and missing fields in JSON.
+/// Represents a value that can be either a concrete value or explicit `null`.
+/// Use this for `nullable<T>` fields that are always present in JSON.
 public enum Nullable<Wrapped>: Codable, Hashable, Sendable
 where Wrapped: Codable & Hashable & Sendable {
     case value(Wrapped)
@@ -54,6 +55,45 @@ where Wrapped: Codable & Hashable & Sendable {
             self = .value(value)
         } else {
             self = .null
+        }
+    }
+}
+
+// MARK: - Helper Extensions for Optional<Nullable<T>> Encoding/Decoding
+
+extension KeyedDecodingContainer {
+    /// Decodes a Nullable<T>? value, properly handling missing vs null vs value
+    /// Use this for `optional<nullable<T>>` fields
+    public func decodeNullableIfPresent<T>(
+        _ type: T.Type, forKey key: KeyedDecodingContainer<K>.Key
+    ) throws -> Nullable<T>? where T: Decodable {
+        if contains(key) {
+            if try decodeNil(forKey: key) {
+                return .null
+            } else {
+                let value = try decode(type, forKey: key)
+                return .value(value)
+            }
+        } else {
+            return nil
+        }
+    }
+}
+
+extension KeyedEncodingContainer {
+    /// Encodes a Nullable<T>? value, properly handling missing vs null vs value
+    /// Use this for `optional<nullable<T>>` fields
+    public mutating func encodeNullableIfPresent<T>(
+        _ value: Nullable<T>?, forKey key: KeyedEncodingContainer<K>.Key
+    ) throws where T: Encodable {
+        switch value {
+        case nil:
+            // Don't encode the key at all - field is missing
+            break
+        case .some(.null):
+            try encodeNil(forKey: key)
+        case .some(.value(let wrapped)):
+            try encode(wrapped, forKey: key)
         }
     }
 }
