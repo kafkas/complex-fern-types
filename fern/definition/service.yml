@@ -20,3 +20,12 @@ service:
         content-type: application/octet-stream
       response:
         type: string
+
+    uploadSingleDocument:
+      path: /upload
+      method: POST
+      request:
+        name: UploadSingleDocument
+        body:
+          properties:
+            documentFile: file
