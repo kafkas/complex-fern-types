@@ -22,10 +22,35 @@ service:
         type: string
 
     uploadSingleDocument:
-      path: /upload
+      path: /upload-single-document
       method: POST
       request:
         name: UploadSingleDocument
         body:
           properties:
             documentFile: file
+
+    uploadListOfDocuments:
+      path: /upload-list-of-documents
+      method: POST
+      request:
+        name: UploadListOfDocuments
+        body:
+          properties:
+            documentFile1: file
+            documentFile2: file
+            documentFiles: list<file>
+
+    uploadMultipleDocumentsAndFields:
+      path: /upload-multiple-documents-and-fields
+      method: POST
+      request:
+        name: UploadMultipleDocumentsAndFields
+        body:
+          properties:
+            documentFile1: file
+            documentFile2: file
+            documentFiles: list<file>
+            someString: string
+            someInteger: integer
+            someBoolean: boolean
