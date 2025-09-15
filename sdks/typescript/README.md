@@ -26,6 +26,19 @@ const client = new SeedApiClient({ environment: "YOUR_BASE_URL" });
 await client.service.simple();
 ```
 
+## Request And Response Types
+
+The SDK exports all request and response types as TypeScript interfaces. Simply import them with the
+following namespace:
+
+```typescript
+import { SeedApi } from "@fern/custom";
+
+const request: SeedApi.UploadSingleDocument = {
+    ...
+};
+```
+
 ## Exception Handling
 
 When the API returns a non-success status code (4xx or 5xx response), a subclass of the following error
