@@ -236,7 +236,7 @@ export class Service {
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)),
-                "/upload",
+                "/upload-single-document",
             ),
             method: "POST",
             headers: _headers,
@@ -268,7 +268,158 @@ export class Service {
                     rawResponse: _response.rawResponse,
                 });
             case "timeout":
-                throw new errors.SeedApiTimeoutError("Timeout exceeded when calling POST /upload.");
+                throw new errors.SeedApiTimeoutError("Timeout exceeded when calling POST /upload-single-document.");
+            case "unknown":
+                throw new errors.SeedApiError({
+                    message: _response.error.errorMessage,
+                    rawResponse: _response.rawResponse,
+                });
+        }
+    }
+
+    /**
+     * @param {SeedApi.UploadListOfDocuments} request
+     * @param {Service.RequestOptions} requestOptions - Request-specific configuration.
+     */
+    public uploadListOfDocuments(
+        request: SeedApi.UploadListOfDocuments,
+        requestOptions?: Service.RequestOptions,
+    ): core.HttpResponsePromise<void> {
+        return core.HttpResponsePromise.fromPromise(this.__uploadListOfDocuments(request, requestOptions));
+    }
+
+    private async __uploadListOfDocuments(
+        request: SeedApi.UploadListOfDocuments,
+        requestOptions?: Service.RequestOptions,
+    ): Promise<core.WithRawResponse<void>> {
+        const _request = await core.newFormData();
+        await _request.appendFile("documentFile1", request.documentFile1);
+        await _request.appendFile("documentFile2", request.documentFile2);
+        for (const _file of request.documentFiles) {
+            await _request.appendFile("documentFiles", _file);
+        }
+
+        const _maybeEncodedRequest = await _request.getRequest();
+        let _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ ..._maybeEncodedRequest.headers }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)),
+                "/upload-list-of-documents",
+            ),
+            method: "POST",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            requestType: "file",
+            duplex: _maybeEncodedRequest.duplex,
+            body: _maybeEncodedRequest.body,
+            timeoutMs: requestOptions?.timeoutInSeconds != null ? requestOptions.timeoutInSeconds * 1000 : 60000,
+            maxRetries: requestOptions?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+        });
+        if (_response.ok) {
+            return { data: undefined, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            throw new errors.SeedApiError({
+                statusCode: _response.error.statusCode,
+                body: _response.error.body,
+                rawResponse: _response.rawResponse,
+            });
+        }
+
+        switch (_response.error.reason) {
+            case "non-json":
+                throw new errors.SeedApiError({
+                    statusCode: _response.error.statusCode,
+                    body: _response.error.rawBody,
+                    rawResponse: _response.rawResponse,
+                });
+            case "timeout":
+                throw new errors.SeedApiTimeoutError("Timeout exceeded when calling POST /upload-list-of-documents.");
+            case "unknown":
+                throw new errors.SeedApiError({
+                    message: _response.error.errorMessage,
+                    rawResponse: _response.rawResponse,
+                });
+        }
+    }
+
+    /**
+     * @param {SeedApi.UploadMultipleDocumentsAndFields} request
+     * @param {Service.RequestOptions} requestOptions - Request-specific configuration.
+     */
+    public uploadMultipleDocumentsAndFields(
+        request: SeedApi.UploadMultipleDocumentsAndFields,
+        requestOptions?: Service.RequestOptions,
+    ): core.HttpResponsePromise<void> {
+        return core.HttpResponsePromise.fromPromise(this.__uploadMultipleDocumentsAndFields(request, requestOptions));
+    }
+
+    private async __uploadMultipleDocumentsAndFields(
+        request: SeedApi.UploadMultipleDocumentsAndFields,
+        requestOptions?: Service.RequestOptions,
+    ): Promise<core.WithRawResponse<void>> {
+        const _request = await core.newFormData();
+        await _request.appendFile("documentFile1", request.documentFile1);
+        await _request.appendFile("documentFile2", request.documentFile2);
+        for (const _file of request.documentFiles) {
+            await _request.appendFile("documentFiles", _file);
+        }
+
+        _request.append("someString", request.someString);
+        _request.append("someInteger", request.someInteger.toString());
+        _request.append("someBoolean", request.someBoolean.toString());
+        const _maybeEncodedRequest = await _request.getRequest();
+        let _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ ..._maybeEncodedRequest.headers }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)),
+                "/upload-multiple-documents-and-fields",
+            ),
+            method: "POST",
+            headers: _headers,
+            queryParameters: requestOptions?.queryParams,
+            requestType: "file",
+            duplex: _maybeEncodedRequest.duplex,
+            body: _maybeEncodedRequest.body,
+            timeoutMs: requestOptions?.timeoutInSeconds != null ? requestOptions.timeoutInSeconds * 1000 : 60000,
+            maxRetries: requestOptions?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+        });
+        if (_response.ok) {
+            return { data: undefined, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            throw new errors.SeedApiError({
+                statusCode: _response.error.statusCode,
+                body: _response.error.body,
+                rawResponse: _response.rawResponse,
+            });
+        }
+
+        switch (_response.error.reason) {
+            case "non-json":
+                throw new errors.SeedApiError({
+                    statusCode: _response.error.statusCode,
+                    body: _response.error.rawBody,
+                    rawResponse: _response.rawResponse,
+                });
+            case "timeout":
+                throw new errors.SeedApiTimeoutError(
+                    "Timeout exceeded when calling POST /upload-multiple-documents-and-fields.",
+                );
             case "unknown":
                 throw new errors.SeedApiError({
                     message: _response.error.errorMessage,
