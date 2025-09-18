@@ -31,20 +31,18 @@ public struct Extensive: Codable, Hashable, Sendable {
         self.creationDate = try container.decode(CalendarDate.self, forKey: .creationDate)
         self.creationTime = try container.decode(Date.self, forKey: .creationTime)
         self.nullableString = try container.decode(Nullable<String>.self, forKey: .nullableString)
-        self.optionalNullableString = try container.decodeNullableIfPresent(
-            String.self, forKey: .optionalNullableString)
+        self.optionalNullableString = try container.decodeNullableIfPresent(String.self, forKey: .optionalNullableString)
         self.additionalProperties = try decoder.decodeAdditionalProperties(using: CodingKeys.self)
     }
 
-    public func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws -> Void {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try encoder.encodeAdditionalProperties(self.additionalProperties)
         try container.encode(self.name, forKey: .name)
         try container.encode(self.creationDate, forKey: .creationDate)
         try container.encode(self.creationTime, forKey: .creationTime)
         try container.encode(self.nullableString, forKey: .nullableString)
-        try container.encodeNullableIfPresent(
-            self.optionalNullableString, forKey: .optionalNullableString)
+        try container.encodeNullableIfPresent(self.optionalNullableString, forKey: .optionalNullableString)
     }
 
     /// Keys for encoding/decoding struct properties.

@@ -34,4 +34,31 @@ public final class ServiceClient: Sendable {
             responseType: String.self
         )
     }
+
+    public func uploadSingleDocument(request: any Codable, requestOptions: RequestOptions? = nil) async throws -> Void {
+        return try await httpClient.performRequest(
+            method: .post,
+            path: "/upload-single-document",
+            body: request,
+            requestOptions: requestOptions
+        )
+    }
+
+    public func uploadListOfDocuments(request: any Codable, requestOptions: RequestOptions? = nil) async throws -> Void {
+        return try await httpClient.performRequest(
+            method: .post,
+            path: "/upload-list-of-documents",
+            body: request,
+            requestOptions: requestOptions
+        )
+    }
+
+    public func uploadMultipleDocumentsAndFields(request: any Codable, requestOptions: RequestOptions? = nil) async throws -> Void {
+        return try await httpClient.performRequest(
+            method: .post,
+            path: "/upload-multiple-documents-and-fields",
+            body: request,
+            requestOptions: requestOptions
+        )
+    }
 }
