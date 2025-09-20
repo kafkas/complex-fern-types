@@ -16,7 +16,7 @@ final class HTTPClient: Sendable {
         contentType requestContentType: HTTP.ContentType = .applicationJson,
         headers requestHeaders: [String: String?] = [:],
         queryParams requestQueryParams: [String: QueryParameter?] = [:],
-        body requestBody: (any Encodable)? = nil,
+        body requestBody: Any? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
         _ = try await performRequest(
@@ -31,6 +31,7 @@ final class HTTPClient: Sendable {
         )
     }
 
+
     /// Performs a request with the specified response type.
     func performRequest<T: Decodable>(
         method: HTTP.Method,
@@ -38,15 +39,19 @@ final class HTTPClient: Sendable {
         contentType requestContentType: HTTP.ContentType = .applicationJson,
         headers requestHeaders: [String: String?] = [:],
         queryParams requestQueryParams: [String: QueryParameter?] = [:],
-        body requestBody: (any Encodable)? = nil,
+        body requestBody: Any? = nil,
         requestOptions: RequestOptions? = nil,
         responseType: T.Type
     ) async throws -> T {
         let requestBody: HTTP.RequestBody? = requestBody.map { body in
-            if let data = body as? Data {
+            if let multipartData = body as? HTTP.MultipartFormData {
+                return .multipartFormData(multipartData)
+            } else if let data = body as? Data {
                 return .data(data)
+            } else if let encodable = body as? any Encodable {
+                return .jsonEncodable(encodable)
             } else {
-                return .jsonEncodable(body)
+                preconditionFailure("Unsupported body type: \(type(of: body))")
             }
         }
 
@@ -110,10 +115,16 @@ final class HTTPClient: Sendable {
         request.httpMethod = method.rawValue
 
         // Set headers
+        var multipartContentType: String? = nil
+        if let requestBody = requestBody, case .multipartFormData(let multipartData) = requestBody {
+            multipartContentType = multipartData.contentType
+        }
+        
         let headers = try await buildRequestHeaders(
             requestContentType: requestContentType,
             requestHeaders: requestHeaders,
-            requestOptions: requestOptions
+            requestOptions: requestOptions,
+            multipartContentType: multipartContentType
         )
         for (key, value) in headers {
             request.setValue(value, forHTTPHeaderField: key)
@@ -121,10 +132,12 @@ final class HTTPClient: Sendable {
 
         // Set body
         if let requestBody = requestBody {
-            request.httpBody = buildRequestBody(
+            let bodyData = buildRequestBody(
                 requestBody: requestBody,
                 requestOptions: requestOptions
             )
+            request.httpBody = bodyData
+            
         }
 
         return request
@@ -163,10 +176,18 @@ final class HTTPClient: Sendable {
     private func buildRequestHeaders(
         requestContentType: HTTP.ContentType,
         requestHeaders: [String: String?],
-        requestOptions: RequestOptions? = nil
+        requestOptions: RequestOptions? = nil,
+        multipartContentType: String? = nil
     ) async throws -> [String: String] {
         var headers = clientConfig.headers ?? [:]
-        headers["Content-Type"] = requestContentType.rawValue
+        
+        // Use multipart content type if provided, otherwise use the standard content type
+        if let multipartContentType = multipartContentType {
+            headers["Content-Type"] = multipartContentType
+        } else if requestContentType != .multipartFormData {
+            headers["Content-Type"] = requestContentType.rawValue
+        }
+        
         if let headerAuth = clientConfig.headerAuth {
             headers[headerAuth.header] = requestOptions?.apiKey ?? headerAuth.key
         }
@@ -213,6 +234,8 @@ final class HTTPClient: Sendable {
             }
         case .data(let dataBody):
             return dataBody
+        case .multipartFormData(let multipartData):
+            return multipartData.getFinalData()
         }
     }
 

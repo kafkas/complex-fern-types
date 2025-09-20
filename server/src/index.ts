@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import multer from "multer";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -8,6 +9,15 @@ import { middleware } from "./middleware";
 const expressApp = express();
 
 expressApp.use(cors());
+
+// Configure multer for multipart form data handling
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { 
+    fileSize: 50 * 1024 * 1024, // 50MB limit
+    files: 10 // Max 10 files
+  }
+});
 
 expressApp.post("/download-file", middleware, async (req, res) => {
   console.log("Serving file download request", Date.now());
@@ -72,6 +82,161 @@ expressApp.post(
       );
   }
 );
+
+// Simple endpoint for testing
+expressApp.post("/snippet", middleware, async (req, res) => {
+  console.log("Received simple request", Date.now());
+  res.status(200).send("Success");
+});
+
+// Upload single document endpoint
+expressApp.post("/upload-single-document", middleware, upload.single('documentFile'), async (req, res) => {
+  console.log("Receiving single document upload request", Date.now());
+  console.log("Raw body type:", typeof req.body);
+  console.log("Raw body length:", req.body ? req.body.length : 'undefined');
+  console.log("Files object:", req.files);
+  console.log("File object:", req.file);
+  console.log("Request headers:", req.headers);
+  
+  const file = req.file;
+  if (!file) {
+    console.log("❌ ERROR: No file received by multer");
+    res.status(400).send("No documentFile provided");
+    return;
+  }
+  
+  console.log(`Received single document: ${file.originalname} (${file.size} bytes)`);
+  
+  // Save the uploaded file
+  const fileName = file.originalname || 'document';
+  const uploadPath = join(__dirname, `../uploaded_${fileName}`);
+  writeFileSync(uploadPath, file.buffer);
+  
+  console.log(`Single document saved as: uploaded_${fileName}`);
+  res.status(200).send(`Single document uploaded successfully! File: ${fileName} (${file.size} bytes)`);
+});
+
+// Upload list of documents endpoint  
+expressApp.post("/upload-list-of-documents", middleware, upload.fields([
+  { name: 'documentFile1', maxCount: 1 },
+  { name: 'documentFile2', maxCount: 1 },
+  { name: 'documentFiles', maxCount: 10 }
+]), async (req, res) => {
+  console.log("Receiving list of documents upload request", Date.now());
+  
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+  
+  if (!files || (!files.documentFile1 && !files.documentFile2 && !files.documentFiles)) {
+    res.status(400).send("No document files provided");
+    return;
+  }
+  
+  let totalFiles = 0;
+  let totalSize = 0;
+  const uploadedFiles: string[] = [];
+  
+  // Process documentFile1
+  if (files.documentFile1 && files.documentFile1.length > 0) {
+    const file = files.documentFile1[0]!;
+    const fileName = `doc1_${file.originalname || 'document'}`;
+    const uploadPath = join(__dirname, `../uploaded_${fileName}`);
+    writeFileSync(uploadPath, file.buffer);
+    uploadedFiles.push(fileName);
+    totalFiles++;
+    totalSize += file.size;
+    console.log(`DocumentFile1 saved as: uploaded_${fileName}`);
+  }
+  
+  // Process documentFile2
+  if (files.documentFile2 && files.documentFile2.length > 0) {
+    const file = files.documentFile2[0]!;
+    const fileName = `doc2_${file.originalname || 'document'}`;
+    const uploadPath = join(__dirname, `../uploaded_${fileName}`);
+    writeFileSync(uploadPath, file.buffer);
+    uploadedFiles.push(fileName);
+    totalFiles++;
+    totalSize += file.size;
+    console.log(`DocumentFile2 saved as: uploaded_${fileName}`);
+  }
+  
+  // Process documentFiles array
+  if (files.documentFiles) {
+    files.documentFiles.forEach((file, index) => {
+      const fileName = `docs_${index}_${file.originalname || 'document'}`;
+      const uploadPath = join(__dirname, `../uploaded_${fileName}`);
+      writeFileSync(uploadPath, file.buffer);
+      uploadedFiles.push(fileName);
+      totalFiles++;
+      totalSize += file.size;
+      console.log(`DocumentFiles[${index}] saved as: uploaded_${fileName}`);
+    });
+  }
+  
+  res.status(200).send(`List of documents uploaded successfully! ${totalFiles} files (${totalSize} bytes total): ${uploadedFiles.join(', ')}`);
+});
+
+// Upload multiple documents and fields endpoint
+expressApp.post("/upload-multiple-documents-and-fields", middleware, upload.fields([
+  { name: 'documentFile1', maxCount: 1 },
+  { name: 'documentFile2', maxCount: 1 },
+  { name: 'documentFiles', maxCount: 10 }
+]), async (req, res) => {
+  console.log("Receiving multiple documents and fields upload request", Date.now());
+  
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+  const { someString, someInteger, someBoolean } = req.body;
+  
+  if (!files || (!files.documentFile1 && !files.documentFile2 && !files.documentFiles)) {
+    res.status(400).send("No document files provided");
+    return;
+  }
+  
+  console.log("Form fields received:");
+  console.log(`  someString: ${someString}`);
+  console.log(`  someInteger: ${someInteger}`);
+  console.log(`  someBoolean: ${someBoolean}`);
+  
+  let totalFiles = 0;
+  let totalSize = 0;
+  const uploadedFiles: string[] = [];
+  
+  // Process files (same logic as upload-list-of-documents)
+  if (files.documentFile1 && files.documentFile1.length > 0) {
+    const file = files.documentFile1[0]!;
+    const fileName = `multi_doc1_${file.originalname || 'document'}`;
+    const uploadPath = join(__dirname, `../uploaded_${fileName}`);
+    writeFileSync(uploadPath, file.buffer);
+    uploadedFiles.push(fileName);
+    totalFiles++;
+    totalSize += file.size;
+    console.log(`DocumentFile1 saved as: uploaded_${fileName}`);
+  }
+  
+  if (files.documentFile2 && files.documentFile2.length > 0) {
+    const file = files.documentFile2[0]!;
+    const fileName = `multi_doc2_${file.originalname || 'document'}`;
+    const uploadPath = join(__dirname, `../uploaded_${fileName}`);
+    writeFileSync(uploadPath, file.buffer);
+    uploadedFiles.push(fileName);
+    totalFiles++;
+    totalSize += file.size;
+    console.log(`DocumentFile2 saved as: uploaded_${fileName}`);
+  }
+  
+  if (files.documentFiles) {
+    files.documentFiles.forEach((file, index) => {
+      const fileName = `multi_docs_${index}_${file.originalname || 'document'}`;
+      const uploadPath = join(__dirname, `../uploaded_${fileName}`);
+      writeFileSync(uploadPath, file.buffer);
+      uploadedFiles.push(fileName);
+      totalFiles++;
+      totalSize += file.size;
+      console.log(`DocumentFiles[${index}] saved as: uploaded_${fileName}`);
+    });
+  }
+  
+  res.status(200).send(`Multiple documents and fields uploaded successfully! Files: ${uploadedFiles.join(', ')} | Fields: someString="${someString}", someInteger=${someInteger}, someBoolean=${someBoolean}`);
+});
 
 const PORT = 8080;
 const TIMEOUT_SECONDS = 60;

@@ -15,11 +15,13 @@
     "firebase-admin": "^12.1.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "multer": "2.0.2",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
     "@types/lodash": "^4.17.18",
+    "@types/multer": "^2.0.0",
     "@types/node": "^20",
     "typescript": "5.8.3"
   }

@@ -303,6 +303,8 @@ func main() async {
 
         try runNullableTests()
 
+        try await runMultipartUploadTests()
+
         print("🎉 All tests passed successfully!")
 
     } catch {
