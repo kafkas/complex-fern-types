@@ -24,14 +24,12 @@ enum HTTP {
 
     /// Helper class for building multipart form data requests
     class MultipartFormData {
-        private let boundary: String
+        let boundary: String
         private var bodyData: Data
-        let contentType: String
 
         init() {
             self.boundary = "Boundary-\(UUID().uuidString)"
             self.bodyData = Data()
-            self.contentType = "\(ContentType.multipartFormData.rawValue); boundary=\(boundary)"
         }
 
         /// Append a file field to the form data

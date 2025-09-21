@@ -173,12 +173,19 @@ final class HTTPClient: Sendable {
     ) async throws -> [String: String] {
         var headers = clientConfig.headers ?? [:]
 
+        var contentType = requestContentType.rawValue
+
         if let requestBody, case .multipartFormData(let multipartData) = requestBody {
-            // Multipart form data has a custom content type including the boundary
-            headers["Content-Type"] = multipartData.contentType
-        } else {
-            headers["Content-Type"] = requestContentType.rawValue
+            // Multipart form data content type must include the boundary
+            if (contentType != HTTP.ContentType.multipartFormData.rawValue) {
+                preconditionFailure(
+                    "The content type for multipart form data requests must be multipart/form-data - this indicates an unexpected error in the SDK."
+                )
+            }
+            contentType = "\(contentType); boundary=\(multipartData.boundary)"
         }
+
+        headers["Content-Type"] = contentType
 
         if let headerAuth = clientConfig.headerAuth {
             headers[headerAuth.header] = requestOptions?.apiKey ?? headerAuth.key
