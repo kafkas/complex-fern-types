@@ -173,19 +173,10 @@ final class HTTPClient: Sendable {
     ) async throws -> [String: String] {
         var headers = clientConfig.headers ?? [:]
 
-        var contentType = requestContentType.rawValue
-
-        if let requestBody, case .multipartFormData(let multipartData) = requestBody {
-            if contentType != HTTP.ContentType.multipartFormData.rawValue {
-                preconditionFailure(
-                    "The content type for multipart form data requests must be multipart/form-data - this indicates an unexpected error in the SDK."
-                )
-            }
-            // Multipart form data content type must include the boundary
-            contentType = "\(contentType); boundary=\(multipartData.boundary)"
-        }
-
-        headers["Content-Type"] = contentType
+        headers["Content-Type"] = buildContentTypeHeader(
+            requestBody: requestBody,
+            requestContentType: requestContentType
+        )
 
         if let headerAuth = clientConfig.headerAuth {
             headers[headerAuth.header] = requestOptions?.apiKey ?? headerAuth.key
@@ -205,6 +196,23 @@ final class HTTPClient: Sendable {
             headers[key] = value
         }
         return headers
+    }
+
+    private func buildContentTypeHeader(
+        requestBody: HTTP.RequestBody?,
+        requestContentType: HTTP.ContentType,
+    ) -> String {
+        var contentType = requestContentType.rawValue
+        if let requestBody, case .multipartFormData(let multipartData) = requestBody {
+            if contentType != HTTP.ContentType.multipartFormData.rawValue {
+                preconditionFailure(
+                    "The content type for multipart form data requests must be multipart/form-data - this indicates an unexpected error in the SDK."
+                )
+            }
+            // Multipart form data content type must include the boundary
+            contentType = "\(contentType); boundary=\(multipartData.boundary)"
+        }
+        return contentType
     }
 
     private func getBearerAuthToken(_ requestOptions: RequestOptions?) async throws -> String? {
