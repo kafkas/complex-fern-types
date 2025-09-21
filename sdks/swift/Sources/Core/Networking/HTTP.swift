@@ -25,32 +25,31 @@ enum HTTP {
     /// Helper class for building multipart form data requests
     class MultipartFormData {
         private var boundary: String
-        private var bodyData = Data()
+        private var contentType: String
+        private var bodyData: Data
 
         init() {
             self.boundary = "Boundary-\(UUID().uuidString)"
-        }
-
-        /// Get the complete content type string including the boundary
-        var contentType: String {
-            return "multipart/form-data; boundary=\(boundary)"
+            self.contentType = "\(ContentType.multipartFormData.rawValue); boundary=\(boundary)"
+            self.bodyData = Data()
         }
 
         /// Append a file field to the form data
         func appendFile(
-            _ data: Data, withName name: String, fileName: String? = nil,
-            mimeType: String = "application/octet-stream"
+            _ data: Data, withName name: String, fileName: String? = nil
         ) {
             bodyData.append("--\(boundary)\r\n".data(using: .utf8)!)
 
             var contentDisposition = "Content-Disposition: form-data; name=\"\(name)\""
-            if let fileName = fileName {
+            if let fileName {
                 contentDisposition += "; filename=\"\(fileName)\""
             }
             contentDisposition += "\r\n"
 
             bodyData.append(contentDisposition.data(using: .utf8)!)
-            bodyData.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
+            bodyData.append(
+                "Content-Type: \(ContentType.applicationOctetStream.rawValue)\r\n\r\n".data(
+                    using: .utf8)!)
             bodyData.append(data)
             bodyData.append("\r\n".data(using: .utf8)!)
         }
