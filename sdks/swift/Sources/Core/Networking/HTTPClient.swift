@@ -31,7 +31,6 @@ final class HTTPClient: Sendable {
         )
     }
 
-
     /// Performs a request with the specified response type.
     func performRequest<T: Decodable>(
         method: HTTP.Method,
@@ -119,7 +118,7 @@ final class HTTPClient: Sendable {
         if let requestBody = requestBody, case .multipartFormData(let multipartData) = requestBody {
             multipartContentType = multipartData.contentType
         }
-        
+
         let headers = try await buildRequestHeaders(
             requestContentType: requestContentType,
             requestHeaders: requestHeaders,
@@ -137,7 +136,7 @@ final class HTTPClient: Sendable {
                 requestOptions: requestOptions
             )
             request.httpBody = bodyData
-            
+
         }
 
         return request
@@ -180,14 +179,14 @@ final class HTTPClient: Sendable {
         multipartContentType: String? = nil
     ) async throws -> [String: String] {
         var headers = clientConfig.headers ?? [:]
-        
+
         // Use multipart content type if provided, otherwise use the standard content type
         if let multipartContentType = multipartContentType {
             headers["Content-Type"] = multipartContentType
         } else if requestContentType != .multipartFormData {
             headers["Content-Type"] = requestContentType.rawValue
         }
-        
+
         if let headerAuth = clientConfig.headerAuth {
             headers[headerAuth.header] = requestOptions?.apiKey ?? headerAuth.key
         }
