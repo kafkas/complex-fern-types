@@ -114,16 +114,11 @@ final class HTTPClient: Sendable {
         request.httpMethod = method.rawValue
 
         // Set headers
-        var multipartContentType: String? = nil
-        if let requestBody = requestBody, case .multipartFormData(let multipartData) = requestBody {
-            multipartContentType = multipartData.contentType
-        }
-
         let headers = try await buildRequestHeaders(
+            requestBody: requestBody,
             requestContentType: requestContentType,
             requestHeaders: requestHeaders,
-            requestOptions: requestOptions,
-            multipartContentType: multipartContentType
+            requestOptions: requestOptions
         )
         for (key, value) in headers {
             request.setValue(value, forHTTPHeaderField: key)
@@ -131,12 +126,10 @@ final class HTTPClient: Sendable {
 
         // Set body
         if let requestBody = requestBody {
-            let bodyData = buildRequestBody(
+            request.httpBody = buildRequestBody(
                 requestBody: requestBody,
                 requestOptions: requestOptions
             )
-            request.httpBody = bodyData
-
         }
 
         return request
@@ -173,17 +166,17 @@ final class HTTPClient: Sendable {
     }
 
     private func buildRequestHeaders(
+        requestBody: HTTP.RequestBody?,
         requestContentType: HTTP.ContentType,
         requestHeaders: [String: String?],
-        requestOptions: RequestOptions? = nil,
-        multipartContentType: String? = nil
+        requestOptions: RequestOptions? = nil
     ) async throws -> [String: String] {
         var headers = clientConfig.headers ?? [:]
 
-        // Use multipart content type if provided, otherwise use the standard content type
-        if let multipartContentType = multipartContentType {
-            headers["Content-Type"] = multipartContentType
-        } else if requestContentType != .multipartFormData {
+        if let requestBody, case .multipartFormData(let multipartData) = requestBody {
+            // Multipart form data has a custom content type including the boundary
+            headers["Content-Type"] = multipartData.contentType
+        } else {
             headers["Content-Type"] = requestContentType.rawValue
         }
 

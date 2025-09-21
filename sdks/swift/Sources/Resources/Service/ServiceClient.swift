@@ -42,6 +42,7 @@ public final class ServiceClient: Sendable {
         return try await httpClient.performRequest(
             method: .post,
             path: "/upload-single-document",
+            contentType: .multipartFormData,
             body: multipartData,
             requestOptions: requestOptions
         )
@@ -60,6 +61,7 @@ public final class ServiceClient: Sendable {
         return try await httpClient.performRequest(
             method: .post,
             path: "/upload-list-of-documents",
+            contentType: .multipartFormData,
             body: multipartData,
             requestOptions: requestOptions
         )
@@ -84,6 +86,7 @@ public final class ServiceClient: Sendable {
         return try await httpClient.performRequest(
             method: .post,
             path: "/upload-multiple-documents-and-fields",
+            contentType: .multipartFormData,
             body: multipartData,
             requestOptions: requestOptions
         )
