@@ -176,12 +176,12 @@ final class HTTPClient: Sendable {
         var contentType = requestContentType.rawValue
 
         if let requestBody, case .multipartFormData(let multipartData) = requestBody {
-            // Multipart form data content type must include the boundary
-            if (contentType != HTTP.ContentType.multipartFormData.rawValue) {
+            if contentType != HTTP.ContentType.multipartFormData.rawValue {
                 preconditionFailure(
                     "The content type for multipart form data requests must be multipart/form-data - this indicates an unexpected error in the SDK."
                 )
             }
+            // Multipart form data content type must include the boundary
             contentType = "\(contentType); boundary=\(multipartData.boundary)"
         }
 
