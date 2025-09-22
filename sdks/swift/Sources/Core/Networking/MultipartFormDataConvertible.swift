@@ -18,16 +18,17 @@ enum MultipartField {
 
 extension MultipartFormDataConvertible {
     /// Builds multipart form data from the fields
-    func buildMultipartFormData() -> HTTP.MultipartFormData {
-        let multipartData = HTTP.MultipartFormData()
-        
+    func buildMultipartFormData() -> MultipartFormData {
+        let multipartData = MultipartFormData()
+
         for field in multipartFields {
             switch field {
             case .file(let file, let fieldName):
                 multipartData.appendFile(file.data, withName: fieldName, fileName: file.filename)
             case .fileArray(let files, let fieldName):
                 for file in files {
-                    multipartData.appendFile(file.data, withName: fieldName, fileName: file.filename)
+                    multipartData.appendFile(
+                        file.data, withName: fieldName, fileName: file.filename)
                 }
             case .text(let value, let fieldName):
                 multipartData.appendField(value, withName: fieldName)

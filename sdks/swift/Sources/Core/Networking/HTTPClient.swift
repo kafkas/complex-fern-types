@@ -43,7 +43,7 @@ final class HTTPClient: Sendable {
         responseType: T.Type
     ) async throws -> T {
         let requestBody: HTTP.RequestBody? = requestBody.map { body in
-            if let multipartData = body as? HTTP.MultipartFormData {
+            if let multipartData = body as? MultipartFormData {
                 return .multipartFormData(multipartData)
             } else if let data = body as? Data {
                 return .data(data)
