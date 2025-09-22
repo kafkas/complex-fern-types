@@ -34,7 +34,7 @@ extension Requests {
 }
 
 extension Requests.UploadMultipleDocumentsAndFields: MultipartFormDataConvertible {
-    var multipartFields: [MultipartField] {
+    var multipartFormFields: [MultipartFormField] {
         return [
             .file(documentFile1, fieldName: "documentFile1"),
             .file(documentFile2, fieldName: "documentFile2"),

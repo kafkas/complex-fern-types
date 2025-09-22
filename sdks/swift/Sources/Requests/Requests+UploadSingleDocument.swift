@@ -12,7 +12,7 @@ extension Requests {
 }
 
 extension Requests.UploadSingleDocument: MultipartFormDataConvertible {
-    var multipartFields: [MultipartField] {
+    var multipartFormFields: [MultipartFormField] {
         return [
             .file(documentFile, fieldName: "documentFile")
         ]

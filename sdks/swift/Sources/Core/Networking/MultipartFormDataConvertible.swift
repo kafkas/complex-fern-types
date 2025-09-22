@@ -3,22 +3,7 @@ import Foundation
 /// Protocol for types that can be converted to multipart form data
 protocol MultipartFormDataConvertible {
     /// The multipart fields that represent this request
-    var multipartFields: [MultipartField] { get }
-}
-
-/// Represents a field in multipart form data
-enum MultipartField {
-    /// A single file field
-    case file(_ file: FormFile, fieldName: String)
-    /// An array of files with the same field name
-    case fileArray(_ files: [FormFile], fieldName: String)
-    /// A text field with JSON-encoded value (for strings, numbers, booleans, dates, etc.)
-    case field(_ value: EncodableValue, fieldName: String)
-
-    /// Create a text field from any Encodable value
-    static func field<T: Encodable>(_ value: T, fieldName: String) -> MultipartField {
-        return .field(.init(value), fieldName: fieldName)
-    }
+    var multipartFormFields: [MultipartFormField] { get }
 }
 
 extension MultipartFormDataConvertible {
@@ -27,7 +12,7 @@ extension MultipartFormDataConvertible {
         let multipartData = MultipartFormData()
         let jsonEncoder = Serde.jsonEncoder
 
-        for field in multipartFields {
+        for field in multipartFormFields {
             switch field {
             case .file(let file, let fieldName):
                 multipartData.appendFile(file.data, withName: fieldName, fileName: file.filename)

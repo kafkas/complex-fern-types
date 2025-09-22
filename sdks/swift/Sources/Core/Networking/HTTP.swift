@@ -21,5 +21,4 @@ enum HTTP {
         case data(Data)
         case multipartFormData(MultipartFormData)
     }
-
 }
