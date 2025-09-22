@@ -39,9 +39,9 @@ extension Requests.UploadMultipleDocumentsAndFields: MultipartFormDataConvertibl
             .file(documentFile1, fieldName: "documentFile1"),
             .file(documentFile2, fieldName: "documentFile2"),
             .fileArray(documentFiles, fieldName: "documentFiles"),
-            .text(value: someString, fieldName: "someString"),
-            .text(value: String(someInteger), fieldName: "someInteger"),
-            .text(value: String(someBoolean), fieldName: "someBoolean"),
+            .field(someString, fieldName: "someString"),
+            .field(someInteger, fieldName: "someInteger"),
+            .field(someBoolean, fieldName: "someBoolean"),
         ]
     }
 }
