@@ -17,7 +17,7 @@ enum MultipartField {
 
     /// Create a text field from any Encodable value
     static func field<T: Encodable>(_ value: T, fieldName: String) -> MultipartField {
-        return .field(EncodableValue(value), fieldName: fieldName)
+        return .field(.init(value), fieldName: fieldName)
     }
 }
 
