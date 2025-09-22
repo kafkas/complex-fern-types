@@ -9,9 +9,9 @@ protocol MultipartFormDataConvertible {
 /// Represents a field in multipart form data
 enum MultipartField {
     /// A single file field
-    case file(data: Data, fieldName: String, fileName: String? = nil)
+    case file(_ file: FormFile, fieldName: String)
     /// An array of files with the same field name
-    case fileArray(data: [Data], fieldName: String)
+    case fileArray(_ files: [FormFile], fieldName: String)
     /// A text field (for strings, numbers, booleans, etc.)
     case text(value: String, fieldName: String)
 }
@@ -23,11 +23,11 @@ extension MultipartFormDataConvertible {
         
         for field in multipartFields {
             switch field {
-            case .file(let data, let fieldName, let fileName):
-                multipartData.appendFile(data, withName: fieldName, fileName: fileName)
-            case .fileArray(let dataArray, let fieldName):
-                for data in dataArray {
-                    multipartData.appendFile(data, withName: fieldName)
+            case .file(let file, let fieldName):
+                multipartData.appendFile(file.data, withName: fieldName, fileName: file.filename)
+            case .fileArray(let files, let fieldName):
+                for file in files {
+                    multipartData.appendFile(file.data, withName: fieldName, fileName: file.filename)
                 }
             case .text(let value, let fieldName):
                 multipartData.appendField(value, withName: fieldName)

@@ -3,9 +3,9 @@ import Foundation
 extension Requests {
     public struct UploadSingleDocument {
         /// The document file to upload
-        public let documentFile: Data
+        public let documentFile: FormFile
 
-        public init(documentFile: Data) {
+        public init(documentFile: FormFile) {
             self.documentFile = documentFile
         }
     }
@@ -14,7 +14,7 @@ extension Requests {
 extension Requests.UploadSingleDocument: MultipartFormDataConvertible {
     var multipartFields: [MultipartField] {
         return [
-            .file(data: documentFile, fieldName: "documentFile")
+            .file(documentFile, fieldName: "documentFile")
         ]
     }
 }

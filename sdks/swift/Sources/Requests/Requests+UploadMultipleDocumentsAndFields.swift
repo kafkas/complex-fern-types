@@ -3,11 +3,11 @@ import Foundation
 extension Requests {
     public struct UploadMultipleDocumentsAndFields {
         /// The first document file to upload
-        public let documentFile1: Data
+        public let documentFile1: FormFile
         /// The second document file to upload
-        public let documentFile2: Data
+        public let documentFile2: FormFile
         /// Additional document files to upload
-        public let documentFiles: [Data]
+        public let documentFiles: [FormFile]
         /// A string field
         public let someString: String
         /// An integer field
@@ -16,9 +16,9 @@ extension Requests {
         public let someBoolean: Bool
 
         public init(
-            documentFile1: Data,
-            documentFile2: Data,
-            documentFiles: [Data],
+            documentFile1: FormFile,
+            documentFile2: FormFile,
+            documentFiles: [FormFile],
             someString: String,
             someInteger: Int,
             someBoolean: Bool
@@ -36,9 +36,9 @@ extension Requests {
 extension Requests.UploadMultipleDocumentsAndFields: MultipartFormDataConvertible {
     var multipartFields: [MultipartField] {
         return [
-            .file(data: documentFile1, fieldName: "documentFile1"),
-            .file(data: documentFile2, fieldName: "documentFile2"),
-            .fileArray(data: documentFiles, fieldName: "documentFiles"),
+            .file(documentFile1, fieldName: "documentFile1"),
+            .file(documentFile2, fieldName: "documentFile2"),
+            .fileArray(documentFiles, fieldName: "documentFiles"),
             .text(value: someString, fieldName: "someString"),
             .text(value: String(someInteger), fieldName: "someInteger"),
             .text(value: String(someBoolean), fieldName: "someBoolean"),

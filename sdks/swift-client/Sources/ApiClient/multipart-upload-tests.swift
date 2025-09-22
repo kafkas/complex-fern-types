@@ -19,7 +19,8 @@ func runMultipartUploadTests() async throws {
     // Test 1: Upload Single Document
     print("\n--- Testing uploadSingleDocument ---")
     do {
-        let singleDocRequest = Requests.UploadSingleDocument(documentFile: testFileContent)
+        let documentFile = FormFile(data: testFileContent, filename: "test-document.txt")
+        let singleDocRequest = Requests.UploadSingleDocument(documentFile: documentFile)
         try await apiClient.service.uploadSingleDocument(request: singleDocRequest)
         print("  ✅ Single document upload successful!")
     } catch {
@@ -30,10 +31,14 @@ func runMultipartUploadTests() async throws {
     // Test 2: Upload List of Documents
     print("\n--- Testing uploadListOfDocuments ---")
     do {
+        let documentFile1 = FormFile(data: testFileContent, filename: "document1.txt")
+        let documentFile2 = FormFile(data: testFileContent2, filename: "document2.txt") 
+        let documentFile3 = FormFile(data: testFileContent3, filename: "document3.txt")
+        
         let listDocsRequest = Requests.UploadListOfDocuments(
-            documentFile1: testFileContent,
-            documentFile2: testFileContent2,
-            documentFiles: [testFileContent3]
+            documentFile1: documentFile1,
+            documentFile2: documentFile2,
+            documentFiles: [documentFile3]
         )
         try await apiClient.service.uploadListOfDocuments(request: listDocsRequest)
         print("  ✅ List of documents upload successful!")
@@ -45,10 +50,14 @@ func runMultipartUploadTests() async throws {
     // Test 3: Upload Multiple Documents and Fields
     print("\n--- Testing uploadMultipleDocumentsAndFields ---")
     do {
+        let documentFile1 = FormFile(data: testFileContent, filename: "multi-doc1.txt")
+        let documentFile2 = FormFile(data: testFileContent2, filename: "multi-doc2.txt")
+        let documentFile3 = FormFile(data: testFileContent3, filename: "multi-doc3.txt")
+        
         let multipleDocsRequest = Requests.UploadMultipleDocumentsAndFields(
-            documentFile1: testFileContent,
-            documentFile2: testFileContent2,
-            documentFiles: [testFileContent3],
+            documentFile1: documentFile1,
+            documentFile2: documentFile2,
+            documentFiles: [documentFile3],
             someString: "Swift SDK Test String",
             someInteger: 42,
             someBoolean: true
