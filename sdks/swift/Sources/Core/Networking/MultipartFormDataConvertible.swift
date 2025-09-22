@@ -22,8 +22,8 @@ enum MultipartField {
 }
 
 extension MultipartFormDataConvertible {
-    /// Builds multipart form data from the fields
-    func buildMultipartFormData() -> MultipartFormData {
+    /// Converts this request to multipart form data
+    func asMultipartFormData() -> MultipartFormData {
         let multipartData = MultipartFormData()
         let jsonEncoder = Serde.jsonEncoder
 

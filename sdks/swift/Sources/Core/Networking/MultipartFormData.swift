@@ -36,8 +36,8 @@ class MultipartFormData {
         bodyData.appendUTF8String("\r\n")
     }
 
-    /// Get the final form data with closing boundary
-    func getFinalData() -> Data {
+    /// Returns the complete multipart form data with closing boundary
+    func data() -> Data {
         var finalData = bodyData
         finalData.appendUTF8String("--\(boundary)--\r\n")
         return finalData

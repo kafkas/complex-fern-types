@@ -44,7 +44,7 @@ public final class ServiceClient: Sendable {
             method: .post,
             path: "/upload-single-document",
             contentType: .multipartFormData,
-            body: request.buildMultipartFormData(),
+            body: request.asMultipartFormData(),
             requestOptions: requestOptions
         )
     }
@@ -56,7 +56,7 @@ public final class ServiceClient: Sendable {
             method: .post,
             path: "/upload-list-of-documents",
             contentType: .multipartFormData,
-            body: request.buildMultipartFormData(),
+            body: request.asMultipartFormData(),
             requestOptions: requestOptions
         )
     }
@@ -68,7 +68,7 @@ public final class ServiceClient: Sendable {
             method: .post,
             path: "/upload-multiple-documents-and-fields",
             contentType: .multipartFormData,
-            body: request.buildMultipartFormData(),
+            body: request.asMultipartFormData(),
             requestOptions: requestOptions
         )
     }

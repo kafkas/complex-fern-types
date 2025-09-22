@@ -242,7 +242,7 @@ final class HTTPClient: Sendable {
         case .data(let dataBody):
             return dataBody
         case .multipartFormData(let multipartData):
-            return multipartData.getFinalData()
+            return multipartData.data()
         }
     }
 
