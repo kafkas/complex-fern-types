@@ -11,6 +11,7 @@ extension Requests {
         }
     }
 }
+
 extension Requests.UploadSingleDocument: MultipartFormDataConvertible {
     var multipartFormFields: [MultipartFormField] {
         [
