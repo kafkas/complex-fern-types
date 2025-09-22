@@ -49,6 +49,40 @@ class ServiceClient:
         _response = self._raw_client.simple(request_options=request_options)
         return _response.data
 
+    def send_inlined_request(
+        self, *, some_string: str, some_int: int, request_options: typing.Optional[RequestOptions] = None
+    ) -> None:
+        """
+        Parameters
+        ----------
+        some_string : str
+
+        some_int : int
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        from seed import SeedApi
+
+        client = SeedApi(
+            base_url="https://yourhost.com/path/to/api",
+        )
+        client.service.send_inlined_request(
+            some_string="someString",
+            some_int=1,
+        )
+        """
+        _response = self._raw_client.send_inlined_request(
+            some_string=some_string, some_int=some_int, request_options=request_options
+        )
+        return _response.data
+
     def download_file(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.Iterator[bytes]:
         """
         Parameters
@@ -232,6 +266,48 @@ class AsyncServiceClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.simple(request_options=request_options)
+        return _response.data
+
+    async def send_inlined_request(
+        self, *, some_string: str, some_int: int, request_options: typing.Optional[RequestOptions] = None
+    ) -> None:
+        """
+        Parameters
+        ----------
+        some_string : str
+
+        some_int : int
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        import asyncio
+
+        from seed import AsyncSeedApi
+
+        client = AsyncSeedApi(
+            base_url="https://yourhost.com/path/to/api",
+        )
+
+
+        async def main() -> None:
+            await client.service.send_inlined_request(
+                some_string="someString",
+                some_int=1,
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.send_inlined_request(
+            some_string=some_string, some_int=some_int, request_options=request_options
+        )
         return _response.data
 
     async def download_file(

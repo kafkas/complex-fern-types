@@ -6,6 +6,16 @@ service:
       path: "/snippet"
       method: POST
 
+    sendInlinedRequest:
+      path: /inlined-request
+      method: POST
+      request:
+        name: SendInlinedRequest
+        body:
+          properties:
+            someString: string
+            someInt: integer
+
     downloadFile:
       path: "/download-file"
       method: POST
