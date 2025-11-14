@@ -34,7 +34,7 @@ following namespace:
 ```typescript
 import { SeedApi } from "@fern/custom";
 
-const request: SeedApi.UploadSingleDocument = {
+const request: SeedApi.SendInlinedRequest = {
     ...
 };
 ```
@@ -74,38 +74,35 @@ await client.service.uploadFile(new File(['binary data'], 'file.mp3'), ...);
 await client.service.uploadFile(new ArrayBuffer(8), ...);
 await client.service.uploadFile(new Uint8Array([0, 1, 2]), ...);
 ```
-
 The client accepts a variety of types for file upload parameters:
-
-- Stream types: `fs.ReadStream`, `stream.Readable`, and `ReadableStream`
-- Buffered types: `Buffer`, `Blob`, `File`, `ArrayBuffer`, `ArrayBufferView`, and `Uint8Array`
+* Stream types: `fs.ReadStream`, `stream.Readable`, and `ReadableStream`
+* Buffered types: `Buffer`, `Blob`, `File`, `ArrayBuffer`, `ArrayBufferView`, and `Uint8Array`
 
 ### Metadata
 
 You can configure metadata when uploading a file:
-
 ```typescript
 const file: Uploadable.WithMetadata = {
     data: createReadStream("path/to/file"),
-    filename: "my-file", // optional
+    filename: "my-file",       // optional
     contentType: "audio/mpeg", // optional
-    contentLength: 1949, // optional
+    contentLength: 1949,       // optional
 };
 ```
 
 Alternatively, you can upload a file directly from a file path:
-
 ```typescript
-const file: Uploadable.FromPath = {
+const file : Uploadable.FromPath = {
     path: "path/to/file",
-    filename: "my-file", // optional
-    contentType: "audio/mpeg", // optional
-    contentLength: 1949, // optional
+    filename: "my-file",        // optional
+    contentType: "audio/mpeg",  // optional
+    contentLength: 1949,        // optional
 };
 ```
 
 The metadata is used to set the `Content-Length`, `Content-Type`, and `Content-Disposition` headers. If not provided, the client will attempt to determine them automatically.
 For example, `fs.ReadStream` has a `path` property which the SDK uses to retrieve the file size from the filesystem without loading it into memory.
+
 
 ## Binary Response
 
@@ -121,7 +118,6 @@ const stream: ReadableStream<Uint8Array> = response.stream();
 // If you want to check if the response body has been used, you can use the following property.
 const bodyUsed = response.bodyUsed;
 ```
-
 <details>
 <summary>Save binary response to a file</summary>
 
@@ -577,9 +573,75 @@ console.log(data);
 console.log(rawResponse.headers['X-My-Header']);
 ```
 
+### Logging
+
+The SDK supports logging. You can configure the logger by passing in a `logging` object to the client options.
+
+```typescript
+import { SeedApiClient, logging } from "@fern/custom";
+
+const client = new SeedApiClient({
+    ...
+    logging: {
+        level: logging.LogLevel.Debug, // defaults to logging.LogLevel.Info
+        logger: new logging.ConsoleLogger(), // defaults to ConsoleLogger
+        silent: false, // defaults to true, set to false to enable logging
+    }
+});
+```
+The `logging` object can have the following properties:
+- `level`: The log level to use. Defaults to `logging.LogLevel.Info`.
+- `logger`: The logger to use. Defaults to a `logging.ConsoleLogger`.
+- `silent`: Whether to silence the logger. Defaults to `true`.
+
+The `level` property can be one of the following values:
+- `logging.LogLevel.Debug`
+- `logging.LogLevel.Info`
+- `logging.LogLevel.Warn`
+- `logging.LogLevel.Error`
+
+To provide a custom logger, you can pass in an object that implements the `logging.ILogger` interface.
+
+<details>
+<summary>Custom logger examples</summary>
+
+Here's an example using the popular `winston` logging library.
+```ts
+import winston from 'winston';
+
+const winstonLogger = winston.createLogger({...});
+
+const logger: logging.ILogger = {
+    debug: (msg, ...args) => winstonLogger.debug(msg, ...args),
+    info: (msg, ...args) => winstonLogger.info(msg, ...args),
+    warn: (msg, ...args) => winstonLogger.warn(msg, ...args),
+    error: (msg, ...args) => winstonLogger.error(msg, ...args),
+};
+```
+
+Here's an example using the popular `pino` logging library.
+
+```ts
+import pino from 'pino';
+
+const pinoLogger = pino({...});
+
+const logger: logging.ILogger = {
+  debug: (msg, ...args) => pinoLogger.debug(args, msg),
+  info: (msg, ...args) => pinoLogger.info(args, msg),
+  warn: (msg, ...args) => pinoLogger.warn(args, msg),
+  error: (msg, ...args) => pinoLogger.error(args, msg),
+};
+```
+</details>
+
+
 ### Runtime Compatibility
 
+
 The SDK works in the following runtimes:
+
+
 
 - Node.js 18+
 - Vercel
