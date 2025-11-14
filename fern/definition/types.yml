@@ -93,3 +93,14 @@ types:
       creation_time: datetime
       nullable_string: nullable<string>
       optional_nullable_string: optional<nullable<string>>
+
+  CircularWorkspace:
+    properties:
+      name: string
+      project: CircularProject
+  
+  CircularProject:
+    properties:
+      name: string
+      creation_date: date
+      workspace: CircularWorkspace
