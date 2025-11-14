@@ -19,7 +19,7 @@ import Api
 private func main() async throws {
     let client = ComplexFernTypesClient()
 
-    try await client.service.simple()
+    _ = try await client.service.simple()
 }
 
 try await main()
@@ -68,7 +68,7 @@ import Api
 private func main() async throws {
     let client = ComplexFernTypesClient()
 
-    try await client.service.sendInlinedRequest(request: .init(
+    _ = try await client.service.sendInlinedRequest(request: .init(
         someString: "someString",
         someInt: 1
     ))
@@ -108,3 +108,4 @@ try await main()
 </dd>
 </dl>
 </details>
+

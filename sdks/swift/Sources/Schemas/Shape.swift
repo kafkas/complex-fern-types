@@ -1,20 +1,20 @@
 import Foundation
 
 public enum Shape: Codable, Hashable, Sendable {
-    case triangle(Triangle)
-    case square(Square)
     case circle(Circle)
+    case square(Square)
+    case triangle(Triangle)
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let discriminant = try container.decode(String.self, forKey: .type)
         switch discriminant {
-        case "triangle":
-            self = .triangle(try Triangle(from: decoder))
-        case "square":
-            self = .square(try Square(from: decoder))
         case "circle":
             self = .circle(try Circle(from: decoder))
+        case "square":
+            self = .square(try Square(from: decoder))
+        case "triangle":
+            self = .triangle(try Triangle(from: decoder))
         default:
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -27,11 +27,11 @@ public enum Shape: Codable, Hashable, Sendable {
 
     public func encode(to encoder: Encoder) throws -> Void {
         switch self {
-        case .triangle(let data):
+        case .circle(let data):
             try data.encode(to: encoder)
         case .square(let data):
             try data.encode(to: encoder)
-        case .circle(let data):
+        case .triangle(let data):
             try data.encode(to: encoder)
         }
     }
