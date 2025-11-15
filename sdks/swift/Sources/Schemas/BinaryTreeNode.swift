@@ -2,15 +2,15 @@ import Foundation
 
 public struct BinaryTreeNode: Codable, Hashable, Sendable {
     public let name: String
-    public let leftChild: BinaryTreeNode?
-    public let rightChild: BinaryTreeNode?
+    public let leftChild: Indirect<BinaryTreeNode>?
+    public let rightChild: Indirect<BinaryTreeNode>?
     /// Additional properties that are not explicitly defined in the schema
     public let additionalProperties: [String: JSONValue]
 
     public init(
         name: String,
-        leftChild: BinaryTreeNode? = nil,
-        rightChild: BinaryTreeNode? = nil,
+        leftChild: Indirect<BinaryTreeNode>? = nil,
+        rightChild: Indirect<BinaryTreeNode>? = nil,
         additionalProperties: [String: JSONValue] = .init()
     ) {
         self.name = name
@@ -22,8 +22,8 @@ public struct BinaryTreeNode: Codable, Hashable, Sendable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.name = try container.decode(String.self, forKey: .name)
-        self.leftChild = try container.decodeIfPresent(BinaryTreeNode.self, forKey: .leftChild)
-        self.rightChild = try container.decodeIfPresent(BinaryTreeNode.self, forKey: .rightChild)
+        self.leftChild = try container.decodeIfPresent(Indirect<BinaryTreeNode>.self, forKey: .leftChild)
+        self.rightChild = try container.decodeIfPresent(Indirect<BinaryTreeNode>.self, forKey: .rightChild)
         self.additionalProperties = try decoder.decodeAdditionalProperties(using: CodingKeys.self)
     }
 
