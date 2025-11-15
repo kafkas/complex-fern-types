@@ -9,13 +9,13 @@ public struct BinaryTreeNode: Codable, Hashable, Sendable {
 
     public init(
         name: String,
-        leftChild: Indirect<BinaryTreeNode>? = nil,
-        rightChild: Indirect<BinaryTreeNode>? = nil,
+        leftChild: BinaryTreeNode? = nil,
+        rightChild: BinaryTreeNode? = nil,
         additionalProperties: [String: JSONValue] = .init()
     ) {
         self.name = name
-        self.leftChild = leftChild
-        self.rightChild = rightChild
+        self.leftChild = leftChild.map { Indirect($0) }
+        self.rightChild = rightChild.map { Indirect($0) }
         self.additionalProperties = additionalProperties
     }
 

@@ -301,6 +301,8 @@ func main() async {
 
         // try runDateTests()
 
+        try runCircularTests()
+
         try runNullableTests()
 
         try await runMultipartUploadTests()
