@@ -105,3 +105,14 @@ types:
   #     name: string
   #     creation_date: date
   #     workspace: CircularWorkspace
+
+  TreeNode:
+    properties:
+      name: string
+      children: list<TreeNode>
+
+  BinaryTreeNode:
+    properties:
+      name: string
+      leftChild: optional<BinaryTreeNode>
+      rightChild: optional<BinaryTreeNode>
