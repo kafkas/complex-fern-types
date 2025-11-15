@@ -94,13 +94,14 @@ types:
       nullable_string: nullable<string>
       optional_nullable_string: optional<nullable<string>>
 
-  CircularWorkspace:
-    properties:
-      name: string
-      project: CircularProject
+  # This should fail
+  # CircularWorkspace:
+  #   properties:
+  #     name: string
+  #     project: CircularProject
   
-  CircularProject:
-    properties:
-      name: string
-      creation_date: date
-      workspace: CircularWorkspace
+  # CircularProject:
+  #   properties:
+  #     name: string
+  #     creation_date: date
+  #     workspace: CircularWorkspace
