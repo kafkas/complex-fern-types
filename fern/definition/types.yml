@@ -95,16 +95,28 @@ types:
       optional_nullable_string: optional<nullable<string>>
 
   # This should fail
-  # CircularWorkspace:
+  # IllegalCircularWorkspace:
   #   properties:
   #     name: string
-  #     project: CircularProject
+  #     project: IllegalCircularProject
   
-  # CircularProject:
+  # IllegalCircularProject:
   #   properties:
   #     name: string
   #     creation_date: date
-  #     workspace: CircularWorkspace
+  #     workspace: IllegalCircularWorkspace
+
+  CircularWorkspace:
+    properties:
+      name: string
+      project: optional<CircularProject>
+  
+
+  CircularProject:
+    properties:
+      name: string
+      creation_date: date
+      workspace: CircularWorkspace
 
   TreeNode:
     properties:
