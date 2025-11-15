@@ -111,7 +111,6 @@ types:
       name: string
       project: optional<CircularProject>
   
-
   CircularProject:
     properties:
       name: string
