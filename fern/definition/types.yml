@@ -106,24 +106,24 @@ types:
   #     creation_date: date
   #     workspace: IllegalCircularWorkspace
 
-  CircularWorkspace:
-    properties:
-      name: string
-      project: optional<CircularProject>
+  # CircularWorkspace:
+  #   properties:
+  #     name: string
+  #     project: optional<CircularProject>
   
-  CircularProject:
-    properties:
-      name: string
-      creation_date: date
-      workspace: CircularWorkspace
+  # CircularProject:
+  #   properties:
+  #     name: string
+  #     creation_date: date
+  #     workspace: CircularWorkspace
 
-  TreeNode:
-    properties:
-      name: string
-      children: list<TreeNode>
+  # TreeNode:
+  #   properties:
+  #     name: string
+  #     children: list<TreeNode>
 
-  BinaryTreeNode:
-    properties:
-      name: string
-      leftChild: optional<BinaryTreeNode>
-      rightChild: optional<BinaryTreeNode>
+  # BinaryTreeNode:
+  #   properties:
+  #     name: string
+  #     leftChild: optional<BinaryTreeNode>
+  #     rightChild: optional<BinaryTreeNode>
