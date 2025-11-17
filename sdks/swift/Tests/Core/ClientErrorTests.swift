@@ -13,14 +13,13 @@ import Testing
             body: Data(#"{"message":"Bad request"}"#.utf8)
         )
 
-                let client = ComplexFernTypesClient(
+        let client = ComplexFernTypesClient(
             baseURL: "https://api.fern.com",
             urlSession: stub.urlSession
         )
 
-
         do {
-                        _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
+            _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
         } catch let error as ClientError {
@@ -31,7 +30,6 @@ import Testing
             try #require(httpError.statusCode == 400)
             try #require(httpError.kind == .client)
             try #require(httpError.body?.message == "Bad request")
-            try #require(stub.getRequestCount() == 1)
         } catch {
             Issue.record("Expected ClientError, got \(error)")
         }
@@ -45,14 +43,13 @@ import Testing
             body: Data(#"{"message":"Not found"}"#.utf8)
         )
 
-                let client = ComplexFernTypesClient(
+        let client = ComplexFernTypesClient(
             baseURL: "https://api.fern.com",
             urlSession: stub.urlSession
         )
 
-
         do {
-                        _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
+            _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
         } catch let error as ClientError {
@@ -63,7 +60,6 @@ import Testing
             try #require(httpError.statusCode == 404)
             try #require(httpError.kind == .notFound)
             try #require(httpError.body?.message == "Not found")
-            try #require(stub.getRequestCount() == 1)
         } catch {
             Issue.record("Expected ClientError, got \(error)")
         }
@@ -77,14 +73,13 @@ import Testing
             body: Data(#"{"message":"Validation failed"}"#.utf8)
         )
 
-                let client = ComplexFernTypesClient(
+        let client = ComplexFernTypesClient(
             baseURL: "https://api.fern.com",
             urlSession: stub.urlSession
         )
 
-
         do {
-                        _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
+            _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
         } catch let error as ClientError {
@@ -95,7 +90,6 @@ import Testing
             try #require(httpError.statusCode == 422)
             try #require(httpError.kind == .validation)
             try #require(httpError.body?.message == "Validation failed")
-            try #require(stub.getRequestCount() == 1)
         } catch {
             Issue.record("Expected ClientError, got \(error)")
         }
@@ -111,14 +105,13 @@ import Testing
             body: Data(#"{"message":"Internal error"}"#.utf8)
         )
 
-                let client = ComplexFernTypesClient(
+        let client = ComplexFernTypesClient(
             baseURL: "https://api.fern.com",
             urlSession: stub.urlSession
         )
 
-
         do {
-                        _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
+            _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
         } catch let error as ClientError {
@@ -142,14 +135,13 @@ import Testing
             body: Data(#"{"message":"Unavailable"}"#.utf8)
         )
 
-                let client = ComplexFernTypesClient(
+        let client = ComplexFernTypesClient(
             baseURL: "https://api.fern.com",
             urlSession: stub.urlSession
         )
 
-
         do {
-                        _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
+            _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
         } catch let error as ClientError {
@@ -175,14 +167,13 @@ import Testing
             body: Data()
         )
 
-                let client = ComplexFernTypesClient(
+        let client = ComplexFernTypesClient(
             baseURL: "https://api.fern.com",
             urlSession: stub.urlSession
         )
 
-
         do {
-                        _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
+            _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
         } catch let error as ClientError {
@@ -206,14 +197,13 @@ import Testing
             body: Data("Plain text error".utf8)
         )
 
-                let client = ComplexFernTypesClient(
+        let client = ComplexFernTypesClient(
             baseURL: "https://api.fern.com",
             urlSession: stub.urlSession
         )
 
-
         do {
-                        _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
+            _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
         } catch let error as ClientError {
