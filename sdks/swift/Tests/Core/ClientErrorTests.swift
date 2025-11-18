@@ -22,16 +22,16 @@ import Testing
             _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
-        } catch let error as ClientError {
+        } catch let error as ApiError {
             guard case .httpError(let httpError) = error else {
-                Issue.record("Expected ClientError.httpError, got \(error)")
+                Issue.record("Expected ApiError.httpError, got \(error)")
                 return
             }
             try #require(httpError.statusCode == 400)
             try #require(httpError.kind == .client)
             try #require(httpError.body?.message == "Bad request")
         } catch {
-            Issue.record("Expected ClientError, got \(error)")
+            Issue.record("Expected ApiError, got \(error)")
         }
     }
 
@@ -52,16 +52,16 @@ import Testing
             _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
-        } catch let error as ClientError {
+        } catch let error as ApiError {
             guard case .httpError(let httpError) = error else {
-                Issue.record("Expected ClientError.httpError, got \(error)")
+                Issue.record("Expected ApiError.httpError, got \(error)")
                 return
             }
             try #require(httpError.statusCode == 404)
             try #require(httpError.kind == .notFound)
             try #require(httpError.body?.message == "Not found")
         } catch {
-            Issue.record("Expected ClientError, got \(error)")
+            Issue.record("Expected ApiError, got \(error)")
         }
     }
 
@@ -82,16 +82,16 @@ import Testing
             _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
-        } catch let error as ClientError {
+        } catch let error as ApiError {
             guard case .httpError(let httpError) = error else {
-                Issue.record("Expected ClientError.httpError, got \(error)")
+                Issue.record("Expected ApiError.httpError, got \(error)")
                 return
             }
             try #require(httpError.statusCode == 422)
             try #require(httpError.kind == .validation)
             try #require(httpError.body?.message == "Validation failed")
         } catch {
-            Issue.record("Expected ClientError, got \(error)")
+            Issue.record("Expected ApiError, got \(error)")
         }
     }
 
@@ -114,16 +114,16 @@ import Testing
             _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
-        } catch let error as ClientError {
+        } catch let error as ApiError {
             guard case .httpError(let httpError) = error else {
-                Issue.record("Expected ClientError.httpError, got \(error)")
+                Issue.record("Expected ApiError.httpError, got \(error)")
                 return
             }
             try #require(httpError.statusCode == 500)
             try #require(httpError.kind == .server)
             try #require(httpError.body?.message == "Internal error")
         } catch {
-            Issue.record("Expected ClientError, got \(error)")
+            Issue.record("Expected ApiError, got \(error)")
         }
     }
 
@@ -144,16 +144,16 @@ import Testing
             _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
-        } catch let error as ClientError {
+        } catch let error as ApiError {
             guard case .httpError(let httpError) = error else {
-                Issue.record("Expected ClientError.httpError, got \(error)")
+                Issue.record("Expected ApiError.httpError, got \(error)")
                 return
             }
             try #require(httpError.statusCode == 503)
             try #require(httpError.kind == .serviceUnavailable)
             try #require(httpError.body?.message == "Unavailable")
         } catch {
-            Issue.record("Expected ClientError, got \(error)")
+            Issue.record("Expected ApiError, got \(error)")
         }
     }
 
@@ -176,16 +176,16 @@ import Testing
             _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
-        } catch let error as ClientError {
+        } catch let error as ApiError {
             guard case .httpError(let httpError) = error else {
-                Issue.record("Expected ClientError.httpError, got \(error)")
+                Issue.record("Expected ApiError.httpError, got \(error)")
                 return
             }
             try #require(httpError.statusCode == 302)
             try #require(httpError.kind == .redirect)
             try #require(httpError.body == nil)
         } catch {
-            Issue.record("Expected ClientError, got \(error)")
+            Issue.record("Expected ApiError, got \(error)")
         }
     }
 
@@ -206,16 +206,16 @@ import Testing
             _ = try await client.service.simple(requestOptions: RequestOptions(additionalHeaders: stub.headers))
 
             Issue.record("Expected error to be thrown")
-        } catch let error as ClientError {
+        } catch let error as ApiError {
             guard case .httpError(let httpError) = error else {
-                Issue.record("Expected ClientError.httpError, got \(error)")
+                Issue.record("Expected ApiError.httpError, got \(error)")
                 return
             }
             try #require(httpError.statusCode == 500)
             try #require(httpError.kind == .server)
             try #require(httpError.body?.message == "Plain text error")
         } catch {
-            Issue.record("Expected ClientError, got \(error)")
+            Issue.record("Expected ApiError, got \(error)")
         }
     }
 }
