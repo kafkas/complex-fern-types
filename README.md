@@ -8,4 +8,7 @@ Run local CLI
 
 ```bash
 FERN_NO_VERSION_REDIRECTION=true node ../fern/packages/cli/cli/dist/prod/cli.cjs generate --log-level debug --local
+
+# Experimental without Fern CLI
+FERN_NO_VERSION_REDIRECTION=true node ../fern/generators/swift/sdk-runner/dist/cli.cjs generate
 ```

@@ -1,9 +1,9 @@
-# Seed Swift Library
+# FernTest Swift Library
 
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Seed%2FSwift)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=FernTest%2FSwift)
 ![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-orange.svg)
 
-The Seed Swift library provides convenient access to the Seed APIs from Swift.
+The FernTest Swift library provides convenient access to the FernTest APIs from Swift.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ With Swift Package Manager (SPM), add the following to the top-level `dependenci
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/custom/fern", from: "0.0.1"),
+    .package(url: "<git-url>", from: "0.1.0"),
 ]
 ```
 
@@ -43,6 +43,36 @@ private func main() async throws {
 }
 
 try await main()
+```
+
+## Errors
+
+The SDK throws a single error enum for all failures. Client-side issues encoding/decoding failures and network errors use dedicated cases, while non-success HTTP responses are wrapped in an `HTTPError` that exposes the status code, a simple classification and an optional decoded message.
+
+```swift
+import Api
+
+let client = ComplexFernTypesClient(...)
+
+do {
+    let response = try await client.service.simple(...)
+    // Handle successful response
+} catch let error as ApiError {
+    switch error {
+    case .httpError(let httpError):
+        print("Status code:", httpError.statusCode)
+        print("Kind:", httpError.kind)
+        print("Message:", httpError.body?.message ?? httpError.localizedDescription)
+    case .encodingError(let underlying):
+        print("Encoding error:", underlying)
+    case .networkError(let underlying):
+        print("Network error:", underlying)
+    default:
+        print("Other client error:", error)
+    }
+} catch {
+    print("Unexpected error:", error)
+}
 ```
 
 ## Request Types

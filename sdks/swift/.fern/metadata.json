@@ -1,5 +1,5 @@
 {
-  "cliVersion": "DUMMY",
+  "cliVersion": "0.0.0",
   "generatorName": "fernapi/fern-swift-sdk",
   "generatorVersion": "latest",
   "generatorConfig": {
