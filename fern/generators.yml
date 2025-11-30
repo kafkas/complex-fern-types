@@ -1,35 +1,40 @@
 # yaml-language-server: $schema=https://schema.buildwithfern.dev/generators-yml.json
-default-group: local
+default-group: python-local
 
 groups:
-  local:
-      generators:
+  python-local:
+    generators:
+      - name: fernapi/fern-python-sdk
+        version: latest
+        ir-version: v61
+        config: {}
+        output:
+          location: local-file-system
+          path: ../sdks/python
+  python:
+    generators:
+      - name: fernapi/fern-python-sdk
+        version: 4.23.2
+        config: {}
+        output:
+          location: local-file-system
+          path: ../sdks/python
+  swift-local:
+    generators:
       - name: fernapi/fern-swift-sdk
+        version: latest
+        ir-version: v61
         config:
           clientClassName: ComplexFernTypesClient
         output:
           location: local-file-system
           path: ../sdks/swift
+  typescript-local:
+    generators:
+      - name: fernapi/fern-typescript-sdk
         version: latest
         ir-version: v61
-    # generators:
-    #   - name: fernapi/fern-swift-sdk
-    #     config:
-    #       clientClassName: ComplexFernTypesClient
-    #     output:
-    #       location: local-file-system
-    #       path: ../sdks/swift
-    #     version: latest
-    #     ir-version: v59
-    #   - name: fernapi/fern-typescript-sdk
-    #     version: 2.9.4
-    #     config: {}
-    #     output:
-    #       location: local-file-system
-    #       path: ../sdks/typescript
-    #   - name: fernapi/fern-python-sdk
-    #     version: 4.23.2
-    #     config: {}
-    #     output:
-    #       location: local-file-system
-    #       path: ../sdks/python
+        config: {}
+        output:
+          location: local-file-system
+          path: ../sdks/typescript
