@@ -39,9 +39,9 @@ class ServiceClient:
 
         Examples
         --------
-        from fern_test import FernTestApi
+        from seed import SeedApi
 
-        client = FernTestApi(
+        client = SeedApi(
             base_url="https://yourhost.com/path/to/api",
         )
         client.service.simple()
@@ -68,9 +68,9 @@ class ServiceClient:
 
         Examples
         --------
-        from fern_test import FernTestApi
+        from seed import SeedApi
 
-        client = FernTestApi(
+        client = SeedApi(
             base_url="https://yourhost.com/path/to/api",
         )
         client.service.send_inlined_request(
@@ -252,9 +252,9 @@ class AsyncServiceClient:
         --------
         import asyncio
 
-        from fern_test import AsyncFernTestApi
+        from seed import AsyncSeedApi
 
-        client = AsyncFernTestApi(
+        client = AsyncSeedApi(
             base_url="https://yourhost.com/path/to/api",
         )
 
@@ -289,9 +289,9 @@ class AsyncServiceClient:
         --------
         import asyncio
 
-        from fern_test import AsyncFernTestApi
+        from seed import AsyncSeedApi
 
-        client = AsyncFernTestApi(
+        client = AsyncSeedApi(
             base_url="https://yourhost.com/path/to/api",
         )
 
