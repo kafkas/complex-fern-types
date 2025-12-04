@@ -99,7 +99,7 @@ types:
   #   properties:
   #     name: string
   #     project: IllegalCircularProject
-  
+
   # IllegalCircularProject:
   #   properties:
   #     name: string
@@ -110,7 +110,7 @@ types:
   #   properties:
   #     name: string
   #     project: optional<CircularProject>
-  
+
   # CircularProject:
   #   properties:
   #     name: string
@@ -127,3 +127,8 @@ types:
   #     name: string
   #     leftChild: optional<BinaryTreeNode>
   #     rightChild: optional<BinaryTreeNode>
+
+  AccountList:
+    properties:
+      accounts: list<Account>
+      totalAccounts: integer
