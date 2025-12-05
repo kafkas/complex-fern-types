@@ -7,7 +7,9 @@ groups:
       - name: fernapi/fern-python-sdk
         version: latest
         ir-version: v61
-        config: {}
+        config:
+          pydantic_config:
+            use_pydantic_field_aliases: true
         output:
           location: local-file-system
           path: ../sdks/python
