@@ -11,7 +11,7 @@ if typing.TYPE_CHECKING:
     from .service.client import AsyncServiceClient, ServiceClient
 
 
-class SeedApi:
+class FernTestApi:
     """
     Use this class to access the different functions within the SDK. You can instantiate any number of clients with different configuration that will propagate to these functions.
 
@@ -34,9 +34,9 @@ class SeedApi:
 
     Examples
     --------
-    from seed import SeedApi
+    from fern_test import FernTestApi
 
-    client = SeedApi(
+    client = FernTestApi(
         base_url="https://yourhost.com/path/to/api",
     )
     """
@@ -74,7 +74,7 @@ class SeedApi:
         return self._service
 
 
-class AsyncSeedApi:
+class AsyncFernTestApi:
     """
     Use this class to access the different functions within the SDK. You can instantiate any number of clients with different configuration that will propagate to these functions.
 
@@ -97,9 +97,9 @@ class AsyncSeedApi:
 
     Examples
     --------
-    from seed import AsyncSeedApi
+    from fern_test import AsyncFernTestApi
 
-    client = AsyncSeedApi(
+    client = AsyncFernTestApi(
         base_url="https://yourhost.com/path/to/api",
     )
     """

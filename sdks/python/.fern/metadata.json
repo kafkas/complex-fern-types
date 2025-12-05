@@ -1,8 +1,6 @@
 {
-  "cliVersion": "DUMMY",
+  "cliVersion": "0.0.0",
   "generatorName": "fernapi/fern-python-sdk",
   "generatorVersion": "latest",
-  "generatorConfig": {
-    "use_typeddict_requests": true
-  }
+  "generatorConfig": {}
 }
